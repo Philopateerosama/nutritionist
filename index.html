@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كوتش أماني - خبيرة التغذية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دكتور أماني رأفت - Eat Smart</title>
     
     <!-- Google Fonts: Tajawal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,7 +52,7 @@
 
     <style>
         /* Smooth Scrolling */
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
         
         /* Glassmorphism effect */
         .glass {
@@ -62,11 +62,14 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        /* Custom Scrollbar for desktop */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #10B981; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #059669; }
+        ::-webkit-scrollbar-thumb { background: #10B981; border-radius: 10px; }
+        
+        /* Hide scrollbar for mobile horizontal swiping but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Hide number input arrows */
         input[type="number"]::-webkit-inner-spin-button,
@@ -77,11 +80,11 @@
 
         .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Radio button card styling for Calculator */
+        /* Radio button card styling for Calculator - Mobile Optimized */
         .radio-card:checked + label {
             border-color: #10B981;
             background-color: #ecfdf5;
@@ -97,6 +100,21 @@
             -webkit-text-fill-color: transparent;
             background-image: linear-gradient(to left, #10B981, #34D399);
         }
+
+        /* Mobile Bottom Sheet Modal */
+        @media (max-width: 768px) {
+            #modalContainer {
+                align-items: flex-end !important;
+                padding: 0 !important;
+            }
+            #modalContent {
+                border-radius: 2rem 2rem 0 0 !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 2rem !important; /* Extra padding for safe area */
+            }
+            .mobile-bottom-sheet-hidden { transform: translateY(100%) scale(1) !important; }
+            .mobile-bottom-sheet-visible { transform: translateY(0) scale(1) !important; }
+        }
     </style>
 </head>
 <body class="bg-light text-dark font-sans antialiased selection:bg-primary selection:text-white overflow-x-hidden">
@@ -106,12 +124,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="#" class="text-2xl font-black text-primary flex items-center gap-2 tracking-tight">
-                        <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
-                            <i class="fa-solid fa-leaf"></i>
-                        </div>
-                        نوتري لايف
+                <div class="flex-shrink-0 flex items-center z-50">
+                    <a href="#" class="flex items-center gap-2">
+                        <img src="logo.png" alt="Eat Smart Logo" class="h-14 md:h-16 w-auto object-contain" onerror="this.src='https://placehold.co/150x60/10B981/ffffff?text=EAT+SMART'">
                     </a>
                 </div>
                 
@@ -119,107 +134,103 @@
                 <div class="hidden md:flex space-x-8 space-x-reverse items-center">
                     <a href="#home" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">الرئيسية</a>
                     <a href="#calculator" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">حاسبة السعرات</a>
-                    <a href="#recipes" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">الوصفات الذكية</a>
+                    <a href="#recipes" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">الوصفات</a>
                     <a href="#success" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">قصص النجاح</a>
-                    <a href="#pricing" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">الاشتراكات</a>
                     <a href="#pricing" class="bg-primary text-white px-6 py-2.5 rounded-full font-bold hover:bg-emerald-600 shadow-lg shadow-emerald-200 transition transform hover:-translate-y-1">ابدأ رحلتك الآن</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-primary focus:outline-none text-2xl p-2 bg-gray-100 rounded-lg">
+                <div class="md:hidden flex items-center z-50">
+                    <button id="mobile-menu-btn" class="text-dark hover:text-primary focus:outline-none text-2xl p-2 bg-gray-50/50 backdrop-blur rounded-xl border border-gray-100 shadow-sm active:scale-95 transition-transform">
                         <i class="fa-solid fa-bars-staggered"></i>
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md border-b border-gray-100 absolute w-full shadow-2xl origin-top transition-transform duration-300">
-            <div class="px-4 pt-4 pb-8 space-y-3 text-center">
-                <a href="#home" class="block px-3 py-3 text-gray-800 hover:bg-emerald-50 hover:text-primary rounded-xl font-bold">الرئيسية</a>
-                <a href="#calculator" class="block px-3 py-3 text-gray-800 hover:bg-emerald-50 hover:text-primary rounded-xl font-bold">حاسبة السعرات</a>
-                <a href="#recipes" class="block px-3 py-3 text-gray-800 hover:bg-emerald-50 hover:text-primary rounded-xl font-bold">الوصفات الذكية</a>
-                <a href="#success" class="block px-3 py-3 text-gray-800 hover:bg-emerald-50 hover:text-primary rounded-xl font-bold">قصص النجاح</a>
-                <a href="#pricing" class="block px-3 py-3 text-gray-800 hover:bg-emerald-50 hover:text-primary rounded-xl font-bold">الاشتراكات</a>
-                <a href="#pricing" class="block mt-4 w-full bg-primary text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-emerald-200">ابدأ رحلتك الآن</a>
-            </div>
-        </div>
     </nav>
 
+    <!-- Mobile Fullscreen Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white/98 backdrop-blur-xl hidden flex-col justify-center items-center opacity-0 transition-opacity duration-300">
+        <div class="flex flex-col space-y-6 text-center w-full px-8">
+            <a href="#home" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">الرئيسية</a>
+            <a href="#calculator" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">حاسبة السعرات</a>
+            <a href="#recipes" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">الوصفات الذكية</a>
+            <a href="#success" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">قصص النجاح</a>
+            <a href="#pricing" class="mobile-link mt-8 w-full bg-primary text-white px-8 py-4 rounded-2xl font-black text-xl shadow-xl shadow-emerald-200 active:scale-95 transition-transform">ابدأ رحلتك الآن</a>
+        </div>
+    </div>
+
     <!-- Hero Section -->
-    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
-        <!-- Background Blobs -->
-        <div class="absolute top-0 -left-4 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div class="absolute top-0 -right-4 w-72 h-72 bg-amber-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+    <section id="home" class="relative pt-28 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-white">
+        <!-- Background Blobs (Optimized for performance) -->
+        <div class="absolute top-0 -left-4 w-64 h-64 md:w-72 md:h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div class="absolute top-0 -right-4 w-64 h-64 md:w-72 md:h-72 bg-amber-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 2s;"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-8">
+            <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-8">
                 <!-- Text Content -->
                 <div class="w-full lg:w-1/2 text-center lg:text-right fade-in" style="animation-delay: 0.1s;">
-                    <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-primary px-4 py-2 rounded-full text-sm font-bold mb-6">
-                        <span class="relative flex h-3 w-3">
+                    <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-primary px-4 py-2 rounded-full text-xs md:text-sm font-bold mb-6">
+                        <span class="relative flex h-2.5 w-2.5">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
                         </span>
                         نستقبل الآن حجوزات الشهر الجديد
                     </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6 text-slate-800">
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight mb-4 md:mb-6 text-slate-800">
                         حقق حلمك بجسم مثالي وصحة حديد <br class="hidden lg:block">
                         <span class="text-gradient">بدون حرمان أو ملل</span>
                     </h1>
-                    <p class="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
-                        سواء كان هدفك نزول الوزن، بناء العضلات، أو تحسين صحتك العامة. أنا هنا لأقدم لك برامج تغذية وتدريب مخصصة تناسب أسلوب حياتك وتفضيلاتك في الأكل.
+                    <p class="text-base sm:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
+                        مع دكتور أماني رأفت، سواء كان هدفك نزول الوزن، بناء العضلات، أو تحسين صحتك. سأقدم لك برامج مخصصة تناسب حياتك وتفضيلاتك في الأكل.
                     </p>
-                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-                        <a href="#pricing" class="bg-dark text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 shadow-2xl shadow-slate-900/20 transition transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 md:gap-4">
+                        <a href="#pricing" class="bg-dark text-white w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 shadow-xl shadow-slate-900/20 active:scale-95 transition-transform flex items-center justify-center gap-3">
                             اشترك الآن
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
-                        <a href="#calculator" class="bg-white text-primary border-2 border-primary px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-50 transition transform hover:-translate-y-1 flex items-center justify-center gap-3 shadow-lg shadow-emerald-100">
+                        <a href="#calculator" class="bg-white text-primary border-2 border-primary w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-50 active:scale-95 transition-transform flex items-center justify-center gap-3 shadow-lg shadow-emerald-50">
                             احسب سعراتك مجاناً
                             <i class="fa-solid fa-calculator"></i>
                         </a>
                     </div>
                     
                     <!-- Social Proof -->
-                    <div class="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 text-gray-600">
+                    <div class="mt-10 flex flex-row items-center justify-center lg:justify-start gap-4 text-gray-600">
                         <div class="flex -space-x-3 space-x-reverse">
-                            <img class="w-12 h-12 rounded-full border-4 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="user">
-                            <img class="w-12 h-12 rounded-full border-4 border-white object-cover" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="user">
-                            <img class="w-12 h-12 rounded-full border-4 border-white object-cover" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="user">
-                            <div class="w-12 h-12 rounded-full border-4 border-white bg-emerald-100 flex items-center justify-center text-sm font-black text-primary">+5K</div>
+                            <img class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="user">
+                            <img class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="user">
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-xs md:text-sm font-black text-primary shadow-sm">+5K</div>
                         </div>
                         <div class="text-right">
-                            <div class="flex text-amber-400 text-sm mb-1 justify-center sm:justify-start">
+                            <div class="flex text-amber-400 text-xs md:text-sm mb-0.5 justify-start">
                                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                             </div>
-                            <p class="text-sm font-bold">انضم لآلاف العملاء السعداء</p>
+                            <p class="text-xs md:text-sm font-bold">آلاف العملاء السعداء</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Image/Visual -->
-                <div class="w-full lg:w-1/2 relative fade-in" style="animation-delay: 0.3s;">
-                    <div class="relative rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
-                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Healthy Food and Lifestyle" class="w-full object-cover h-[400px] sm:h-[500px] lg:h-[600px] transform hover:scale-105 transition duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div class="w-full lg:w-1/2 relative fade-in mt-6 md:mt-0" style="animation-delay: 0.3s;">
+                    <div class="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 md:border-8 border-white">
+                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Healthy Food and Lifestyle" class="w-full object-cover h-[300px] sm:h-[400px] lg:h-[600px]">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                     </div>
                     
-                    <!-- Floating Cards -->
-                    <div class="absolute bottom-10 -right-4 lg:-right-8 bg-white p-4 rounded-2xl shadow-xl z-20 flex items-center gap-4 animate-float border border-gray-100">
-                        <div class="bg-red-50 text-red-500 w-12 h-12 rounded-full flex items-center justify-center text-xl">
+                    <!-- Floating Cards - Mobile Optimized (Hidden one on small screens to reduce clutter) -->
+                    <div class="absolute bottom-6 -right-2 md:bottom-10 md:-right-8 bg-white/95 backdrop-blur p-3 md:p-4 rounded-2xl shadow-xl z-20 flex items-center gap-3 animate-float border border-gray-100 scale-90 md:scale-100 origin-bottom-right">
+                        <div class="bg-red-50 text-red-500 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl shrink-0">
                             <i class="fa-solid fa-fire-flame-curved"></i>
                         </div>
                         <div>
-                            <p class="text-xs text-gray-500 font-bold mb-1">معدل حرق عالي</p>
-                            <p class="text-lg font-black text-slate-800">-5 كجم شهرياً</p>
+                            <p class="text-[10px] md:text-xs text-gray-500 font-bold mb-0.5">معدل حرق عالي</p>
+                            <p class="text-sm md:text-lg font-black text-slate-800">-5 كجم شهرياً</p>
                         </div>
                     </div>
 
-                    <div class="absolute top-10 -left-4 lg:-left-8 bg-white p-4 rounded-2xl shadow-xl z-20 flex items-center gap-4 animate-float border border-gray-100" style="animation-delay: 1.5s;">
-                        <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-full flex items-center justify-center text-xl">
+                    <div class="hidden sm:flex absolute top-10 -left-8 bg-white/95 backdrop-blur p-4 rounded-2xl shadow-xl z-20 items-center gap-4 animate-float border border-gray-100" style="animation-delay: 1.5s;">
+                        <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-full flex items-center justify-center text-xl shrink-0">
                             <i class="fa-solid fa-dumbbell"></i>
                         </div>
                         <div>
@@ -233,56 +244,56 @@
     </section>
 
     <!-- Calculator Section -->
-    <section id="calculator" class="py-24 bg-slate-50 relative">
-        <!-- Decorative pattern -->
+    <section id="calculator" class="py-16 md:py-24 bg-slate-50 relative">
         <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#10B981 1px, transparent 1px); background-size: 20px 20px;"></div>
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-14 fade-in">
-                <span class="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">أداة مجانية</span>
-                <h2 class="text-3xl md:text-5xl font-black text-dark mb-4">حاسبة السعرات والماكروز 🧮</h2>
-                <p class="text-gray-500 text-lg max-w-2xl mx-auto">أدخل بياناتك بدقة وسنقوم بحساب كمية السعرات الحرارية، البروتين، الكاربوهيدرات، والدهون التي يحتاجها جسمك للوصول لهدفك.</p>
+            <div class="text-center mb-10 md:mb-14 fade-in">
+                <span class="text-primary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">أداة مجانية</span>
+                <h2 class="text-2xl md:text-5xl font-black text-dark mb-4">حاسبة السعرات والماكروز 🧮</h2>
+                <p class="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto">أدخل بياناتك بدقة وسنقوم بحساب كمية السعرات، البروتين، الكارب، والدهون التي يحتاجها جسمك.</p>
             </div>
 
-            <div class="bg-white rounded-[2rem] shadow-2xl p-6 sm:p-10 border border-gray-100 fade-in" style="animation-delay: 0.2s;">
-                <form id="macro-form" class="space-y-8">
+            <div class="bg-white rounded-[2rem] shadow-xl md:shadow-2xl p-5 md:p-10 border border-gray-100 fade-in" style="animation-delay: 0.2s;">
+                <form id="macro-form" class="space-y-6 md:space-y-8">
                     <!-- Gender -->
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-3">النوع</label>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-3 md:gap-4">
                             <div>
                                 <input type="radio" name="gender" id="male" value="male" class="hidden radio-card" checked>
-                                <label for="male" class="flex flex-col items-center justify-center p-5 border-2 border-gray-100 rounded-2xl cursor-pointer transition-all duration-200 text-gray-500 hover:bg-gray-50">
-                                    <i class="fa-solid fa-person text-3xl mb-2"></i>
-                                    <span class="font-bold">ذكر</span>
+                                <label for="male" class="flex flex-col items-center justify-center p-4 md:p-5 border-2 border-gray-100 rounded-2xl cursor-pointer transition-all duration-200 text-gray-400 hover:bg-gray-50">
+                                    <i class="fa-solid fa-person text-2xl md:text-3xl mb-2"></i>
+                                    <span class="font-bold text-sm md:text-base">ذكر</span>
                                 </label>
                             </div>
                             <div>
                                 <input type="radio" name="gender" id="female" value="female" class="hidden radio-card">
-                                <label for="female" class="flex flex-col items-center justify-center p-5 border-2 border-gray-100 rounded-2xl cursor-pointer transition-all duration-200 text-gray-500 hover:bg-gray-50">
-                                    <i class="fa-solid fa-person-dress text-3xl mb-2"></i>
-                                    <span class="font-bold">أنثى</span>
+                                <label for="female" class="flex flex-col items-center justify-center p-4 md:p-5 border-2 border-gray-100 rounded-2xl cursor-pointer transition-all duration-200 text-gray-400 hover:bg-gray-50">
+                                    <i class="fa-solid fa-person-dress text-2xl md:text-3xl mb-2"></i>
+                                    <span class="font-bold text-sm md:text-base">أنثى</span>
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Physical Stats -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Physical Stats (Numeric Keypad optimized) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
                         <div class="relative">
                             <label class="block text-sm font-bold text-gray-700 mb-2">العمر</label>
-                            <input type="number" id="age" required min="10" max="100" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-lg font-bold text-dark" placeholder="مثال: 25">
-                            <span class="absolute left-4 top-[42px] text-gray-400 font-medium">سنة</span>
+                            <!-- inputmode="numeric" triggers phone dialpad -->
+                            <input type="number" id="age" inputmode="numeric" required min="10" max="100" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-lg font-bold text-dark" placeholder="مثال: 25">
+                            <span class="absolute left-4 top-[40px] text-gray-400 font-medium text-sm">سنة</span>
                         </div>
                         <div class="relative">
                             <label class="block text-sm font-bold text-gray-700 mb-2">الوزن</label>
-                            <input type="number" id="weight" required min="30" max="250" step="0.1" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-lg font-bold text-dark" placeholder="مثال: 75">
-                            <span class="absolute left-4 top-[42px] text-gray-400 font-medium">كجم</span>
+                            <input type="number" id="weight" inputmode="decimal" required min="30" max="250" step="0.1" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-lg font-bold text-dark" placeholder="مثال: 75">
+                            <span class="absolute left-4 top-[40px] text-gray-400 font-medium text-sm">كجم</span>
                         </div>
                         <div class="relative">
                             <label class="block text-sm font-bold text-gray-700 mb-2">الطول</label>
-                            <input type="number" id="height" required min="100" max="250" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-lg font-bold text-dark" placeholder="مثال: 170">
-                            <span class="absolute left-4 top-[42px] text-gray-400 font-medium">سم</span>
+                            <input type="number" id="height" inputmode="numeric" required min="100" max="250" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-lg font-bold text-dark" placeholder="مثال: 170">
+                            <span class="absolute left-4 top-[40px] text-gray-400 font-medium text-sm">سم</span>
                         </div>
                     </div>
 
@@ -290,12 +301,11 @@
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">معدل النشاط اليومي</label>
                         <div class="relative">
-                            <select id="activity" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-dark font-bold appearance-none cursor-pointer">
-                                <option value="1.2">خامل (عمل مكتبي، لا يوجد تمرين)</option>
-                                <option value="1.375">نشاط خفيف (تمرين 1-3 أيام في الأسبوع)</option>
-                                <option value="1.55" selected>نشاط متوسط (تمرين 3-5 أيام في الأسبوع)</option>
-                                <option value="1.725">نشط جداً (تمرين 6-7 أيام في الأسبوع)</option>
-                                <option value="1.9">رياضي محترف (تمرين شاق مرتين يومياً)</option>
+                            <select id="activity" class="w-full px-5 py-4 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-dark font-bold text-sm md:text-base appearance-none cursor-pointer">
+                                <option value="1.2">خامل (عمل مكتبي، لا تمرين)</option>
+                                <option value="1.375">نشاط خفيف (1-3 أيام في الأسبوع)</option>
+                                <option value="1.55" selected>نشاط متوسط (3-5 أيام في الأسبوع)</option>
+                                <option value="1.725">نشط جداً (6-7 أيام في الأسبوع)</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-4 text-gray-500">
                                 <i class="fa-solid fa-chevron-down"></i>
@@ -305,91 +315,72 @@
 
                     <!-- Goal -->
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-3">الهدف الأساسي</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-3">الهدف</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                             <div>
                                 <input type="radio" name="goal" id="lose" value="lose" class="hidden radio-card" checked>
-                                <label for="lose" class="flex flex-col items-center justify-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer text-gray-500 hover:bg-gray-50">
-                                    <i class="fa-solid fa-arrow-trend-down mb-2 text-xl"></i>
-                                    <span class="font-bold">خسارة دهون</span>
+                                <label for="lose" class="flex flex-row sm:flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-100 rounded-xl cursor-pointer text-gray-500 hover:bg-gray-50 gap-2 sm:gap-0">
+                                    <i class="fa-solid fa-arrow-trend-down sm:mb-2 text-lg md:text-xl text-red-400"></i>
+                                    <span class="font-bold text-sm">خسارة دهون</span>
                                 </label>
                             </div>
                             <div>
                                 <input type="radio" name="goal" id="maintain" value="maintain" class="hidden radio-card">
-                                <label for="maintain" class="flex flex-col items-center justify-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer text-gray-500 hover:bg-gray-50">
-                                    <i class="fa-solid fa-scale-balanced mb-2 text-xl"></i>
-                                    <span class="font-bold">ثبات الوزن (صيانة)</span>
+                                <label for="maintain" class="flex flex-row sm:flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-100 rounded-xl cursor-pointer text-gray-500 hover:bg-gray-50 gap-2 sm:gap-0">
+                                    <i class="fa-solid fa-scale-balanced sm:mb-2 text-lg md:text-xl text-amber-400"></i>
+                                    <span class="font-bold text-sm">ثبات الوزن</span>
                                 </label>
                             </div>
                             <div>
                                 <input type="radio" name="goal" id="gain" value="gain" class="hidden radio-card">
-                                <label for="gain" class="flex flex-col items-center justify-center p-4 border-2 border-gray-100 rounded-xl cursor-pointer text-gray-500 hover:bg-gray-50">
-                                    <i class="fa-solid fa-arrow-trend-up mb-2 text-xl"></i>
-                                    <span class="font-bold">زيادة وزن / عضلات</span>
+                                <label for="gain" class="flex flex-row sm:flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-100 rounded-xl cursor-pointer text-gray-500 hover:bg-gray-50 gap-2 sm:gap-0">
+                                    <i class="fa-solid fa-arrow-trend-up sm:mb-2 text-lg md:text-xl text-blue-400"></i>
+                                    <span class="font-bold text-sm">بناء عضلات</span>
                                 </label>
                             </div>
                         </div>
                     </div>
 
                     <!-- Submit -->
-                    <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-black text-xl hover:bg-emerald-600 transition duration-300 flex justify-center items-center gap-3 shadow-xl shadow-emerald-200 transform hover:-translate-y-1">
+                    <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-black text-lg md:text-xl hover:bg-emerald-600 active:bg-emerald-700 transition duration-300 flex justify-center items-center gap-3 shadow-xl shadow-emerald-200 transform hover:-translate-y-1 active:translate-y-0">
                         <i class="fa-solid fa-bolt"></i>
                         احسب سعراتي الآن
                     </button>
                 </form>
 
-                <!-- Results Section (Hidden by default) -->
-                <div id="results" class="hidden mt-12 pt-12 border-t-2 border-dashed border-gray-200">
-                    <div class="text-center mb-10">
-                        <span class="inline-block bg-amber-100 text-amber-600 px-4 py-1 rounded-full text-sm font-bold mb-4">النتيجة المخصصة لك 🎉</span>
-                        <h3 class="text-gray-500 font-medium text-lg mb-2">السعرات الحرارية اليومية المستهدفة</h3>
-                        <div class="text-6xl md:text-7xl font-black text-dark tracking-tight"><span id="res-calories" class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">0</span> <span class="text-2xl text-gray-400 font-bold">سعر</span></div>
+                <!-- Results Section -->
+                <div id="results" class="hidden mt-10 pt-10 border-t-2 border-dashed border-gray-200">
+                    <div class="text-center mb-8">
+                        <span class="inline-block bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs font-bold mb-3">النتيجة المخصصة لك 🎉</span>
+                        <h3 class="text-gray-500 font-medium text-sm md:text-lg mb-1">السعرات الحرارية اليومية</h3>
+                        <div class="text-5xl md:text-7xl font-black text-dark tracking-tight"><span id="res-calories" class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">0</span> <span class="text-lg md:text-2xl text-gray-400 font-bold">سعر</span></div>
                     </div>
 
                     <!-- Macros Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Protein -->
-                        <div class="bg-blue-50/50 p-6 rounded-3xl text-center border border-blue-100 relative overflow-hidden group hover:bg-blue-50 transition">
-                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-blue-100 rounded-full opacity-50 group-hover:scale-150 transition duration-500"></div>
-                            <div class="w-14 h-14 mx-auto bg-white text-blue-500 rounded-2xl flex items-center justify-center mb-4 shadow-sm relative z-10 text-2xl">
+                    <div class="grid grid-cols-3 gap-3 md:gap-6">
+                        <div class="bg-blue-50/50 p-4 md:p-6 rounded-2xl text-center border border-blue-100 relative overflow-hidden">
+                            <div class="w-8 h-8 md:w-12 md:h-12 mx-auto bg-white text-blue-500 rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm text-sm md:text-xl">
                                 <i class="fa-solid fa-drumstick-bite"></i>
                             </div>
-                            <p class="text-sm font-bold text-gray-500 mb-1 relative z-10">بروتين (بناء عضلات)</p>
-                            <p class="text-3xl font-black text-blue-600 relative z-10"><span id="res-protein">0</span><span class="text-lg">g</span></p>
+                            <p class="text-[10px] md:text-sm font-bold text-gray-500 mb-1">بروتين</p>
+                            <p class="text-xl md:text-3xl font-black text-blue-600"><span id="res-protein">0</span><span class="text-xs md:text-lg ml-0.5">g</span></p>
                         </div>
                         
-                        <!-- Carbs -->
-                        <div class="bg-amber-50/50 p-6 rounded-3xl text-center border border-amber-100 relative overflow-hidden group hover:bg-amber-50 transition">
-                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-amber-100 rounded-full opacity-50 group-hover:scale-150 transition duration-500"></div>
-                            <div class="w-14 h-14 mx-auto bg-white text-amber-500 rounded-2xl flex items-center justify-center mb-4 shadow-sm relative z-10 text-2xl">
+                        <div class="bg-amber-50/50 p-4 md:p-6 rounded-2xl text-center border border-amber-100 relative overflow-hidden">
+                            <div class="w-8 h-8 md:w-12 md:h-12 mx-auto bg-white text-amber-500 rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm text-sm md:text-xl">
                                 <i class="fa-solid fa-wheat-awn"></i>
                             </div>
-                            <p class="text-sm font-bold text-gray-500 mb-1 relative z-10">كاربوهيدرات (طاقة)</p>
-                            <p class="text-3xl font-black text-amber-600 relative z-10"><span id="res-carbs">0</span><span class="text-lg">g</span></p>
+                            <p class="text-[10px] md:text-sm font-bold text-gray-500 mb-1">كارب</p>
+                            <p class="text-xl md:text-3xl font-black text-amber-600"><span id="res-carbs">0</span><span class="text-xs md:text-lg ml-0.5">g</span></p>
                         </div>
                         
-                        <!-- Fats -->
-                        <div class="bg-rose-50/50 p-6 rounded-3xl text-center border border-rose-100 relative overflow-hidden group hover:bg-rose-50 transition">
-                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-rose-100 rounded-full opacity-50 group-hover:scale-150 transition duration-500"></div>
-                            <div class="w-14 h-14 mx-auto bg-white text-rose-500 rounded-2xl flex items-center justify-center mb-4 shadow-sm relative z-10 text-2xl">
+                        <div class="bg-rose-50/50 p-4 md:p-6 rounded-2xl text-center border border-rose-100 relative overflow-hidden">
+                            <div class="w-8 h-8 md:w-12 md:h-12 mx-auto bg-white text-rose-500 rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm text-sm md:text-xl">
                                 <i class="fa-solid fa-droplet"></i>
                             </div>
-                            <p class="text-sm font-bold text-gray-500 mb-1 relative z-10">دهون صحية (هرمونات)</p>
-                            <p class="text-3xl font-black text-rose-600 relative z-10"><span id="res-fats">0</span><span class="text-lg">g</span></p>
+                            <p class="text-[10px] md:text-sm font-bold text-gray-500 mb-1">دهون</p>
+                            <p class="text-xl md:text-3xl font-black text-rose-600"><span id="res-fats">0</span><span class="text-xs md:text-lg ml-0.5">g</span></p>
                         </div>
-                    </div>
-
-                    <!-- Disclaimer & CTA -->
-                    <div class="mt-10 bg-slate-800 text-white p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div class="flex items-start gap-4">
-                            <i class="fa-solid fa-circle-info text-2xl text-amber-400 mt-1"></i>
-                            <p class="text-sm text-gray-300 leading-relaxed">
-                                هذه الأرقام هي تقدير مبدئي بناءً على المعادلات العلمية. للوصول لهدفك بأسرع وقت وبدون حرمان، يفضل المتابعة مع أخصائي لتصميم جدول وجبات مخصص لك.
-                            </p>
-                        </div>
-                        <a href="#pricing" class="shrink-0 bg-primary hover:bg-emerald-400 text-white px-6 py-3 rounded-xl font-bold transition w-full md:w-auto text-center">
-                            شاهد باقات المتابعة
-                        </a>
                     </div>
                 </div>
             </div>
@@ -397,32 +388,32 @@
     </section>
 
     <!-- Smart Recipe Hub Section -->
-    <section id="recipes" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-14 fade-in">
-                <span class="text-secondary font-bold tracking-wider uppercase text-sm mb-2 block">لذيذ وصحي</span>
-                <h2 class="text-3xl md:text-5xl font-black text-dark mb-4">وصفات ذكية محسوبة الماكروز 🥗</h2>
-                <p class="text-gray-500 text-lg max-w-2xl mx-auto">أكل الدايت مش معناه أكل مسلوق وبدون طعم. جرب وصفاتنا المبتكرة واللي هتخليك تحب نظامك الصحي.</p>
+    <section id="recipes" class="py-16 md:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 md:mb-14 fade-in px-4">
+                <span class="text-secondary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">لذيذ وصحي</span>
+                <h2 class="text-2xl md:text-5xl font-black text-dark mb-4">وصفات ذكية بالماكروز 🥗</h2>
+                <p class="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto">أكل الدايت مش معناه أكل مسلوق. جرب وصفاتنا المبتكرة واللي هتخليك تحب نظامك.</p>
             </div>
 
-            <!-- Filters -->
-            <div class="flex flex-wrap justify-center gap-3 mb-12 fade-in" style="animation-delay: 0.1s;">
-                <button class="filter-btn active bg-dark text-white px-6 py-2.5 rounded-full font-bold shadow-md transition" data-filter="all">الكل</button>
-                <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full font-bold hover:bg-gray-50 transition" data-filter="breakfast">فطار</button>
-                <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full font-bold hover:bg-gray-50 transition" data-filter="lunch">غداء</button>
-                <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full font-bold hover:bg-gray-50 transition" data-filter="dinner">عشاء</button>
-                <button class="filter-btn bg-red-50 text-red-600 border border-red-100 px-6 py-2.5 rounded-full font-bold hover:bg-red-100 transition flex items-center gap-2" data-filter="under400">
-                    <i class="fa-solid fa-fire"></i> تحت 400 سعر
+            <!-- Filters (Horizontal scrollable on mobile) -->
+            <div class="flex overflow-x-auto hide-scrollbar gap-2 md:gap-3 mb-8 pb-2 px-4 md:px-0 md:justify-center fade-in" style="animation-delay: 0.1s;">
+                <button class="filter-btn active shrink-0 bg-dark text-white px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold shadow-md transition" data-filter="all">الكل</button>
+                <button class="filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition" data-filter="breakfast">فطار</button>
+                <button class="filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition" data-filter="lunch">غداء</button>
+                <button class="filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition" data-filter="dinner">عشاء</button>
+                <button class="filter-btn shrink-0 bg-red-50 text-red-600 border border-red-100 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-red-100 transition flex items-center gap-2" data-filter="under400">
+                    <i class="fa-solid fa-fire text-xs"></i> تحت 400 سعر
                 </button>
             </div>
 
             <!-- Recipe Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="recipe-container">
-                <!-- Recipes will be injected here via Vanilla JS to keep the file size reasonable and allow dynamic filtering -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-4 sm:px-0" id="recipe-container">
+                <!-- Injected via JS -->
             </div>
             
-            <div class="text-center mt-12">
-                 <button onclick="showToast('سيتم إضافة المزيد من الوصفات قريباً. تابعونا على الانستغرام!')" class="text-primary font-bold hover:text-emerald-700 transition flex items-center justify-center gap-2 mx-auto">
+            <div class="text-center mt-10">
+                 <button onclick="showToast('سيتم إضافة المزيد قريباً. تابعونا على الانستغرام!')" class="text-primary font-bold text-sm md:text-base hover:text-emerald-700 transition flex items-center justify-center gap-2 mx-auto active:scale-95">
                      عرض المزيد من الوصفات <i class="fa-solid fa-arrow-down"></i>
                  </button>
             </div>
@@ -430,59 +421,59 @@
     </section>
 
     <!-- Success Stories -->
-    <section id="success" class="py-24 bg-slate-900 text-white relative overflow-hidden">
-        <!-- Decoration -->
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary rounded-full mix-blend-overlay filter blur-[100px] opacity-20"></div>
+    <section id="success" class="py-16 md:py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary rounded-full mix-blend-overlay filter blur-[100px] opacity-20"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16 fade-in">
-                <span class="text-secondary font-bold tracking-wider uppercase text-sm mb-2 block">قصص تلهمك</span>
-                <h2 class="text-3xl md:text-5xl font-black mb-4">أبطال نوتري لايف 🏆</h2>
-                <p class="text-gray-400 text-lg">النتائج تتحدث عن نفسها. انضم لقائمة أبطالنا وابدأ تحولك الجذري.</p>
+            <div class="text-center mb-12 md:mb-16 fade-in">
+                <span class="text-secondary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">قصص تلهمك</span>
+                <h2 class="text-2xl md:text-5xl font-black mb-4">أبطال دكتور أماني 🏆</h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Mobile friendly snap-scroll on small screens, grid on large -->
+            <div class="flex overflow-x-auto hide-scrollbar md:grid md:grid-cols-3 gap-4 md:gap-8 pb-4 snap-x snap-mandatory">
+                
                 <!-- Review 1 -->
-                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700">
-                    <div class="flex text-amber-400 mb-4 text-sm">
+                <div class="bg-slate-800 p-6 md:p-8 rounded-[2rem] border border-slate-700 w-80 md:w-auto shrink-0 snap-center">
+                    <div class="flex text-amber-400 mb-4 text-xs md:text-sm">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
-                    <p class="text-gray-300 leading-relaxed mb-6 italic">"كنت بعاني من ثبات الوزن لمدة سنة كاملة. مع كوتش أماني، قدرت أخس 8 كيلو في شهرين بدون ما أحس إني عاملة دايت أصلاً. الوصفات عبقرية ومريحة جداً."</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-primary font-bold text-xl">س</div>
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 italic">"كنت بعاني من ثبات الوزن، مع دكتور أماني قدرت أخس 8 كيلو في شهرين بدون حرمان. الوصفات مريحة جداً."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-primary font-bold">س</div>
                         <div>
-                            <h4 class="font-bold">سارة م.</h4>
-                            <p class="text-sm text-gray-500">خسارة وزن (-8 كجم)</p>
+                            <h4 class="font-bold text-sm md:text-base">سارة م.</h4>
+                            <p class="text-xs text-gray-500">خسارة وزن (-8 كجم)</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Review 2 -->
-                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 transform md:-translate-y-4">
-                    <div class="flex text-amber-400 mb-4 text-sm">
+                <div class="bg-slate-800 p-6 md:p-8 rounded-[2rem] border border-slate-700 w-80 md:w-auto shrink-0 snap-center transform md:-translate-y-4">
+                    <div class="flex text-amber-400 mb-4 text-xs md:text-sm">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
-                    <p class="text-gray-300 leading-relaxed mb-6 italic">"أفضل استثمار عملته في صحتي. المتابعة اليومية على الواتساب بتديني حافز رهيب، والتمارين مناسبة جداً لوقتي الضيق كطالب. العضلات زادت بشكل ملحوظ."</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xl">أ</div>
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 italic">"المتابعة اليومية على الواتساب بتدي حافز رهيب، والتمارين مناسبة لوقتي الضيق كطالب. العضلات زادت جداً."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">أ</div>
                         <div>
-                            <h4 class="font-bold">أحمد ك.</h4>
-                            <p class="text-sm text-gray-500">بناء عضلات</p>
+                            <h4 class="font-bold text-sm md:text-base">أحمد ك.</h4>
+                            <p class="text-xs text-gray-500">بناء عضلات</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Review 3 -->
-                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700">
-                    <div class="flex text-amber-400 mb-4 text-sm">
+                <div class="bg-slate-800 p-6 md:p-8 rounded-[2rem] border border-slate-700 w-80 md:w-auto shrink-0 snap-center">
+                    <div class="flex text-amber-400 mb-4 text-xs md:text-sm">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
-                    <p class="text-gray-300 leading-relaxed mb-6 italic">"كان عندي مشاكل في الهضم ومقاومة أنسولين. بتغيير أسلوب الأكل مع كوتش أماني، التحاليل اتحسنت جداً وطاقتي بقت الضعف في الشغل."</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 font-bold text-xl">م</div>
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 italic">"كان عندي مشاكل هضم. بتغيير أسلوب الأكل مع دكتور أماني، التحاليل اتحسنت وطاقتي زادت الضعف."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 font-bold">م</div>
                         <div>
-                            <h4 class="font-bold">مريم خ.</h4>
-                            <p class="text-sm text-gray-500">تغذية علاجية</p>
+                            <h4 class="font-bold text-sm md:text-base">مريم خ.</h4>
+                            <p class="text-xs text-gray-500">تغذية علاجية</p>
                         </div>
                     </div>
                 </div>
@@ -491,176 +482,174 @@
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="py-24 bg-slate-50 relative">
+    <section id="pricing" class="py-16 md:py-24 bg-slate-50 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 fade-in">
-                <span class="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">الاستثمار في صحتك</span>
-                <h2 class="text-3xl md:text-5xl font-black text-dark mb-4">باقات المتابعة والاشتراكات 💎</h2>
-                <p class="text-gray-500 text-lg max-w-2xl mx-auto">اختر الباقة المناسبة لهدفك وميزانيتك، وابدأ رحلة التغيير اليوم.</p>
+            <div class="text-center mb-12 md:mb-16 fade-in">
+                <span class="text-primary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">الاستثمار في صحتك</span>
+                <h2 class="text-2xl md:text-5xl font-black text-dark mb-4">باقات المتابعة 💎</h2>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
-                <!-- Plan 1: Basic -->
-                <div class="bg-white rounded-[2rem] p-8 border border-gray-200 shadow-lg hover:shadow-xl transition-shadow fade-in">
-                    <h3 class="text-2xl font-bold text-dark mb-2">الباقة الأساسية</h3>
-                    <p class="text-gray-500 mb-6 text-sm">تغدية فقط - لمدة شهر</p>
-                    <div class="text-5xl font-black text-dark mb-2">500<span class="text-xl font-medium text-gray-400 ml-1">ج.م</span></div>
-                    <p class="text-gray-400 text-sm mb-8 border-b border-gray-100 pb-6">تدفع شهرياً</p>
-                    
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">نظام غذائي مخصص مرن</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">تحديث النظام كل أسبوعين</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">متابعة عبر الواتساب (مرتين أسبوعياً)</span></li>
-                        <li class="flex items-start gap-3 opacity-50"><i class="fa-solid fa-xmark text-gray-400 mt-1"></i> <span class="text-gray-500 line-through">نظام تدريب رياضي</span></li>
-                    </ul>
-                    <button onclick="showBookingModal('الباقة الأساسية', '500 ج.م')" class="w-full bg-slate-100 text-dark py-4 rounded-xl font-bold hover:bg-slate-200 transition">طلب اشتراك</button>
-                </div>
-
-                <!-- Plan 2: Popular (Center) -->
-                <div class="bg-dark rounded-[2rem] p-8 border border-slate-800 shadow-2xl transform lg:scale-105 relative fade-in" style="animation-delay: 0.2s;">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto items-center">
+                <!-- VIP Plan (Ordered first on mobile for conversion) -->
+                <div class="bg-dark rounded-[2rem] p-6 md:p-8 border border-slate-800 shadow-2xl transform lg:scale-105 relative order-first lg:order-none fade-in">
                     <!-- Badge -->
-                    <div class="absolute -top-4 right-1/2 transform translate-x-1/2 bg-gradient-to-r from-secondary to-amber-400 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg whitespace-nowrap">
+                    <div class="absolute -top-4 right-1/2 transform translate-x-1/2 bg-gradient-to-r from-secondary to-amber-400 text-white px-4 py-1 rounded-full text-xs md:text-sm font-bold shadow-lg whitespace-nowrap">
                         الأكثر طلباً 🌟
                     </div>
                     
-                    <h3 class="text-2xl font-bold text-white mb-2">الباقة الشاملة VIP</h3>
-                    <p class="text-gray-400 mb-6 text-sm">تغذية وتدريب - لمدة شهر</p>
-                    <div class="text-5xl font-black text-white mb-2">800<span class="text-xl font-medium text-gray-500 ml-1">ج.م</span></div>
-                    <p class="text-gray-500 text-sm mb-8 border-b border-slate-700 pb-6">تدفع شهرياً</p>
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-1">الباقة الشاملة VIP</h3>
+                    <p class="text-gray-400 mb-4 text-xs md:text-sm">تغذية وتدريب - لمدة شهر</p>
+                    <div class="text-4xl md:text-5xl font-black text-white mb-2">800<span class="text-lg font-medium text-gray-500 ml-1">ج.م</span></div>
+                    <p class="text-gray-500 text-xs mb-6 border-b border-slate-700 pb-6">تدفع شهرياً</p>
                     
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-white font-medium">نظام غذائي مخصص مرن (يتحدث أسبوعياً)</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-white font-medium">نظام تدريبي مصور (للجيم أو المنزل)</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-white font-medium">متابعة يومية عبر الواتساب لضمان الالتزام</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-white font-medium">تعديل غير محدود للأنظمة</span></li>
+                    <ul class="space-y-3 md:space-y-4 mb-8 text-sm md:text-base">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-white font-medium">نظام غذائي مرن (تحديث أسبوعي)</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-white font-medium">نظام تدريبي مصور (جيم/منزل)</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-white font-medium">متابعة يومية عبر الواتساب</span></li>
                     </ul>
-                    <button onclick="showBookingModal('الباقة الشاملة VIP', '800 ج.م')" class="w-full bg-primary text-white py-4 rounded-xl font-black text-lg hover:bg-emerald-400 shadow-lg shadow-emerald-500/30 transition transform hover:-translate-y-1">اشترك الآن</button>
+                    <button onclick="showBookingModal('الباقة الشاملة VIP', '800 ج.م')" class="w-full bg-primary text-white py-3.5 md:py-4 rounded-xl font-black text-base md:text-lg hover:bg-emerald-400 active:scale-95 shadow-lg shadow-emerald-500/30 transition transform">اشترك الآن</button>
                 </div>
 
-                <!-- Plan 3: 3 Months -->
-                <div class="bg-white rounded-[2rem] p-8 border border-gray-200 shadow-lg hover:shadow-xl transition-shadow fade-in" style="animation-delay: 0.4s;">
-                    <h3 class="text-2xl font-bold text-dark mb-2">باقة التحول الجذري</h3>
-                    <p class="text-gray-500 mb-6 text-sm">تغذية وتدريب - 3 شهور</p>
-                    <div class="text-5xl font-black text-dark mb-2">2000<span class="text-xl font-medium text-gray-400 ml-1">ج.م</span></div>
-                    <p class="text-emerald-500 font-bold text-sm mb-8 border-b border-gray-100 pb-6">توفر 400 ج.م!</p>
+                <!-- Basic Plan -->
+                <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-gray-200 shadow-lg fade-in order-none">
+                    <h3 class="text-xl md:text-2xl font-bold text-dark mb-1">الباقة الأساسية</h3>
+                    <p class="text-gray-500 mb-4 text-xs md:text-sm">تغدية فقط - لمدة شهر</p>
+                    <div class="text-4xl md:text-5xl font-black text-dark mb-2">500<span class="text-lg font-medium text-gray-400 ml-1">ج.م</span></div>
+                    <p class="text-gray-400 text-xs mb-6 border-b border-gray-100 pb-6">تدفع شهرياً</p>
                     
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">كل مميزات الباقة الشاملة لمدة 3 أشهر</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">مكالمة فيديو شهرية للتقييم (30 دقيقة)</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">كتاب الوصفات الصحية (مجاناً)</span></li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">تثبيت الوزن مجاناً بعد انتهاء المدة</span></li>
+                    <ul class="space-y-3 md:space-y-4 mb-8 text-sm md:text-base">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">نظام غذائي مخصص مرن</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">تحديث النظام كل أسبوعين</span></li>
+                        <li class="flex items-start gap-3 opacity-50"><i class="fa-solid fa-xmark text-gray-400 mt-1"></i> <span class="text-gray-500 line-through">نظام تدريب رياضي</span></li>
                     </ul>
-                    <button onclick="showBookingModal('باقة التحول الجذري (3 شهور)', '2000 ج.م')" class="w-full bg-slate-100 text-dark py-4 rounded-xl font-bold hover:bg-slate-200 transition">طلب اشتراك</button>
+                    <button onclick="showBookingModal('الباقة الأساسية', '500 ج.م')" class="w-full bg-slate-100 text-dark py-3.5 md:py-4 rounded-xl font-bold hover:bg-slate-200 active:scale-95 transition">طلب اشتراك</button>
+                </div>
+
+                <!-- 3 Months Plan -->
+                <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-gray-200 shadow-lg fade-in order-none">
+                    <h3 class="text-xl md:text-2xl font-bold text-dark mb-1">التحول الجذري</h3>
+                    <p class="text-gray-500 mb-4 text-xs md:text-sm">تغذية وتدريب - 3 شهور</p>
+                    <div class="text-4xl md:text-5xl font-black text-dark mb-2">2000<span class="text-lg font-medium text-gray-400 ml-1">ج.م</span></div>
+                    <p class="text-emerald-500 font-bold text-xs mb-6 border-b border-gray-100 pb-6">توفر 400 ج.م!</p>
+                    
+                    <ul class="space-y-3 md:space-y-4 mb-8 text-sm md:text-base">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">مميزات الباقة الشاملة لمدة 3 أشهر</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">مكالمة فيديو شهرية للتقييم</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-primary mt-1"></i> <span class="text-gray-700 font-medium">تثبيت الوزن مجاناً</span></li>
+                    </ul>
+                    <button onclick="showBookingModal('باقة التحول الجذري (3 شهور)', '2000 ج.م')" class="w-full bg-slate-100 text-dark py-3.5 md:py-4 rounded-xl font-bold hover:bg-slate-200 active:scale-95 transition">طلب اشتراك</button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 py-12 mt-10">
+    <footer class="bg-white border-t border-gray-100 py-10 mt-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8 border-b border-gray-100 pb-8">
-                <div class="flex items-center gap-2 text-2xl font-black text-dark">
-                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white text-sm">
-                        <i class="fa-solid fa-leaf"></i>
-                    </div>
-                    نوتري لايف
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8 border-b border-gray-100 pb-8 text-center md:text-right">
+                <div class="flex justify-center md:justify-start items-center">
+                    <img src="logo.png" alt="Eat Smart Logo" class="h-12 w-auto object-contain" onerror="this.src='https://placehold.co/150x50/10B981/ffffff?text=EAT+SMART'">
                 </div>
                 
-                <div class="flex gap-4">
-                    <a href="#" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-500 hover:text-white transition-all duration-300 shadow-sm"><i class="fa-brands fa-instagram text-xl"></i></a>
-                    <a href="#" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition-all duration-300 shadow-sm"><i class="fa-brands fa-tiktok text-xl"></i></a>
-                    <a href="#" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-emerald-500 hover:text-white transition-all duration-300 shadow-sm"><i class="fa-brands fa-whatsapp text-xl"></i></a>
+                <div class="flex gap-4 justify-center">
+                    <a href="https://www.facebook.com/share/1C8KGQFCa7/?mibextid=wwXIfr" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-blue-600 active:text-white md:hover:bg-blue-600 md:hover:text-white transition-all duration-300"><i class="fa-brands fa-facebook-f text-lg"></i></a>
+                    <a href="https://www.instagram.com/dramanyraafat_nutritionist?igsh=MTIwem0zcXg0NXRpMA%3D%3D&utm_source=qr" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-pink-600 active:text-white md:hover:bg-gradient-to-tr md:hover:from-yellow-400 md:hover:via-red-500 md:hover:to-purple-500 md:hover:text-white transition-all duration-300"><i class="fa-brands fa-instagram text-lg"></i></a>
+                    <a href="https://www.tiktok.com/@amanyraafat5?_r=1&_t=ZS-98Byh8SuJ08" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-black active:text-white md:hover:bg-black md:hover:text-white transition-all duration-300"><i class="fa-brands fa-tiktok text-lg"></i></a>
+                    <a href="https://wa.me/201287506835" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-emerald-500 active:text-white md:hover:bg-emerald-500 md:hover:text-white transition-all duration-300"><i class="fa-brands fa-whatsapp text-lg"></i></a>
                 </div>
             </div>
             
-            <div class="text-center text-gray-500 text-sm font-medium">
-                <p>© <span id="year"></span> موقع نوتري لايف - كوتش أماني. جميع الحقوق محفوظة.</p>
-                <p class="mt-2 text-xs text-gray-400">لا تعتبر المعلومات الموجودة في هذا الموقع بديلاً عن الاستشارة الطبية المتخصصة.</p>
+            <div class="text-center text-gray-500 text-xs md:text-sm font-medium">
+                <p>© <span id="year"></span> موقع Eat Smart - دكتور أماني رأفت. جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Booking Modal -->
-    <div id="bookingModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+    <!-- App-Like Bottom Sheet Modal for Booking -->
+    <div id="bookingModal" class="fixed inset-0 z-[100] hidden flex-col justify-end md:justify-center items-center pointer-events-none">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity opacity-0" id="modalBackdrop" onclick="closeBookingModal()"></div>
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity opacity-0 pointer-events-auto" id="modalBackdrop" onclick="closeBookingModal()"></div>
         
-        <!-- Modal Content -->
-        <div class="bg-white rounded-[2rem] shadow-2xl p-8 max-w-md w-full relative z-10 transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
-            <button onclick="closeBookingModal()" class="absolute top-5 left-5 text-gray-400 hover:text-red-500 bg-gray-50 w-8 h-8 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
-            
-            <div class="w-20 h-20 bg-emerald-50 text-primary rounded-full flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">
-                <i class="fa-brands fa-whatsapp"></i>
-            </div>
-            
-            <h3 class="text-2xl font-black text-center text-dark mb-2">إتمام الاشتراك</h3>
-            <p class="text-center text-gray-500 mb-6 font-medium leading-relaxed">
-                لقد اخترت <br> <span id="selectedPlan" class="font-black text-xl text-primary inline-block mt-1"></span>
-                <br> <span class="text-sm text-gray-400">(التكلفة: <span id="selectedPrice"></span>)</span>
-            </p>
-            
-            <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6">
-                <p class="text-sm text-amber-700 font-bold flex gap-2">
-                    <i class="fa-solid fa-circle-info mt-0.5"></i>
-                    سيتم تحويلك الآن لتطبيق الواتساب الخاص بالكوتش لتأكيد الدفع والبدء فوراً.
+        <!-- Modal Content (Acts as bottom sheet on mobile) -->
+        <div id="modalContainer" class="w-full flex justify-center p-0 md:p-4 h-full pointer-events-none">
+            <div class="bg-white rounded-[2rem] shadow-2xl p-6 md:p-8 max-w-md w-full relative z-10 transition-transform duration-300 transform md:scale-95 opacity-0 md:opacity-100 mobile-bottom-sheet-hidden pointer-events-auto flex flex-col" id="modalContent">
+                
+                <!-- Mobile Handle -->
+                <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6 md:hidden"></div>
+                
+                <button onclick="closeBookingModal()" class="absolute top-5 left-5 text-gray-400 hover:text-red-500 bg-gray-50 w-8 h-8 rounded-full hidden md:flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+                
+                <div class="w-16 h-16 md:w-20 md:h-20 bg-emerald-50 text-primary rounded-full flex items-center justify-center text-3xl md:text-4xl mx-auto mb-4 md:mb-6 shadow-inner shrink-0">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                
+                <h3 class="text-xl md:text-2xl font-black text-center text-dark mb-2">تأكيد الاشتراك</h3>
+                <p class="text-center text-gray-500 mb-6 text-sm md:text-base font-medium">
+                    لقد اخترت <br> <span id="selectedPlan" class="font-black text-lg md:text-xl text-primary inline-block mt-1"></span>
+                    <br> <span class="text-xs md:text-sm text-gray-400">(السعر: <span id="selectedPrice"></span>)</span>
                 </p>
+                
+                <a href="#" id="whatsappLink" target="_blank" class="w-full bg-primary text-white py-4 rounded-xl font-bold text-base md:text-lg hover:bg-emerald-600 active:scale-95 transition-transform flex justify-center items-center gap-3 shadow-lg shadow-emerald-200 mb-3">
+                    متابعة للواتساب
+                    <i class="fa-solid fa-paper-plane"></i>
+                </a>
+                <button onclick="closeBookingModal()" class="w-full text-gray-500 font-bold py-3 active:bg-gray-50 rounded-xl transition">إلغاء</button>
             </div>
-            
-            <a href="#" id="whatsappLink" target="_blank" class="w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-emerald-600 transition flex justify-center items-center gap-3 shadow-lg shadow-emerald-200">
-                متابعة للواتساب
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-            <button onclick="closeBookingModal()" class="w-full mt-3 text-gray-500 font-bold py-2 hover:text-dark transition">إلغاء</button>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 bg-dark text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-[110] flex items-center gap-3 min-w-[300px]">
+    <!-- Toast Notification (Moved up slightly to avoid mobile home bars) -->
+    <div id="toast" class="fixed bottom-8 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 bg-dark text-white px-5 py-3 md:px-6 md:py-4 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-[110] flex items-center gap-3 w-[90%] md:w-auto max-w-sm">
         <div class="w-8 h-8 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center shrink-0">
             <i class="fa-solid fa-check"></i>
         </div>
-        <span id="toast-msg" class="font-bold text-sm"></span>
+        <span id="toast-msg" class="font-bold text-xs md:text-sm"></span>
     </div>
 
     <script>
-        // Set current year in footer
+        // Set year
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // --- Mobile Menu Overlay Logic ---
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let menuOpen = false;
+
+        function toggleMenu() {
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+                setTimeout(() => {
+                    mobileMenu.classList.remove('opacity-0');
+                    mobileBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                }, 10);
+            } else {
+                mobileMenu.classList.add('opacity-0');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                    mobileBtn.innerHTML = '<i class="fa-solid fa-bars-staggered"></i>';
+                }, 300);
+            }
+        }
+
+        mobileBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
 
         // --- Navbar Scroll Effect ---
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 20) {
-                navbar.classList.add('shadow-sm', 'bg-white/90');
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-sm', 'bg-white/95');
                 navbar.classList.remove('glass');
             } else {
-                navbar.classList.remove('shadow-sm', 'bg-white/90');
+                navbar.classList.remove('shadow-sm', 'bg-white/95');
                 navbar.classList.add('glass');
             }
-        });
-
-        // --- Mobile Menu Toggle ---
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        let menuOpen = false;
-
-        mobileBtn.addEventListener('click', () => {
-            menuOpen = !menuOpen;
-            if (menuOpen) {
-                mobileMenu.classList.remove('hidden');
-                mobileBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-            } else {
-                mobileMenu.classList.add('hidden');
-                mobileBtn.innerHTML = '<i class="fa-solid fa-bars-staggered"></i>';
-            }
-        });
-
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                menuOpen = false;
-                mobileBtn.innerHTML = '<i class="fa-solid fa-bars-staggered"></i>';
-            });
         });
 
         // --- Toast System ---
@@ -671,41 +660,59 @@
             
             setTimeout(() => {
                 toast.classList.add('translate-y-24', 'opacity-0');
-            }, 3500);
+            }, 3000);
         }
 
-        // --- Booking Modal ---
+        // --- Bottom Sheet Modal Logic ---
         const modal = document.getElementById('bookingModal');
         const modalBackdrop = document.getElementById('modalBackdrop');
         const modalContent = document.getElementById('modalContent');
-        const whatsappNumber = "201000000000"; // Replace with real number
+        const whatsappNumber = "201287506835";
         
         function showBookingModal(planName, price) {
             document.getElementById('selectedPlan').innerText = planName;
             document.getElementById('selectedPrice').innerText = price;
             
-            // Prepare WhatsApp Link Message
-            const message = encodeURIComponent(`مرحباً كوتش أماني، أريد الاشتراك في "${planName}". كيف يمكنني إتمام الدفع؟`);
+            const message = encodeURIComponent(`مرحباً دكتور أماني، أريد الاشتراك في "${planName}". كيف يمكنني إتمام الدفع؟`);
             document.getElementById('whatsappLink').href = `https://wa.me/${whatsappNumber}?text=${message}`;
 
             modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            
             setTimeout(() => {
                 modalBackdrop.classList.remove('opacity-0');
-                modalContent.classList.remove('scale-95', 'opacity-0');
+                if (window.innerWidth <= 768) {
+                    modalContent.classList.remove('mobile-bottom-sheet-hidden');
+                    modalContent.classList.add('mobile-bottom-sheet-visible');
+                    modalContent.style.opacity = '1';
+                } else {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                }
             }, 10);
         }
 
         function closeBookingModal() {
             modalBackdrop.classList.add('opacity-0');
-            modalContent.classList.add('scale-95', 'opacity-0');
+            document.body.style.overflow = '';
+            
+            if (window.innerWidth <= 768) {
+                modalContent.classList.remove('mobile-bottom-sheet-visible');
+                modalContent.classList.add('mobile-bottom-sheet-hidden');
+            } else {
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            
             setTimeout(() => {
                 modal.classList.add('hidden');
+                modalContent.style.opacity = ''; // reset for next open
             }, 300);
         }
 
         // --- Macro Calculator Logic ---
         document.getElementById('macro-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            // Blurs active input to close mobile keyboard automatically
+            document.activeElement.blur(); 
             
             const gender = document.querySelector('input[name="gender"]:checked').value;
             const weight = parseFloat(document.getElementById('weight').value);
@@ -715,11 +722,10 @@
             const goal = document.querySelector('input[name="goal"]:checked').value;
 
             if(!weight || !height || !age) {
-                showToast("الرجاء إدخال جميع البيانات بشكل صحيح.");
+                showToast("الرجاء إدخال جميع البيانات.");
                 return;
             }
 
-            // Mifflin-St Jeor Equation for BMR
             let bmr = (10 * weight) + (6.25 * height) - (5 * age);
             bmr = gender === 'male' ? bmr + 5 : bmr - 161;
 
@@ -729,33 +735,28 @@
             if (goal === 'lose') finalCalories -= 500;
             else if (goal === 'gain') finalCalories += 300;
 
-            // Health constraints
             if(gender === 'female' && finalCalories < 1200) finalCalories = 1200;
             if(gender === 'male' && finalCalories < 1500) finalCalories = 1500;
 
             finalCalories = Math.round(finalCalories);
 
-            // Calculate Macros based on goal
             let proteinGrams, fatGrams, carbsGrams;
 
             if (goal === 'lose') {
-                proteinGrams = weight * 2.2; // High protein for preservation
-                fatGrams = (finalCalories * 0.25) / 9; // 25% fats
+                proteinGrams = weight * 2.2; 
+                fatGrams = (finalCalories * 0.25) / 9; 
             } else if (goal === 'gain') {
-                proteinGrams = weight * 2.0; // Standard for muscle
+                proteinGrams = weight * 2.0; 
                 fatGrams = (finalCalories * 0.25) / 9; 
             } else {
                 proteinGrams = weight * 1.8;
-                fatGrams = (finalCalories * 0.30) / 9; // 30% fats for maintenance
+                fatGrams = (finalCalories * 0.30) / 9; 
             }
 
-            // Remaining calories to carbs
             const proteinCals = proteinGrams * 4;
             const fatCals = fatGrams * 9;
-            const remainingCals = finalCalories - (proteinCals + fatCals);
-            carbsGrams = remainingCals / 4;
+            carbsGrams = (finalCalories - (proteinCals + fatCals)) / 4;
 
-            // Animate Numbers
             animateValue("res-calories", 0, finalCalories, 1000);
             animateValue("res-protein", 0, Math.round(proteinGrams), 1000);
             animateValue("res-fats", 0, Math.round(fatGrams), 1000);
@@ -763,7 +764,13 @@
 
             const resultsSection = document.getElementById('results');
             resultsSection.classList.remove('hidden');
-            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Smooth scroll to results specifically adjusted for mobile view
+            setTimeout(() => {
+                const y = resultsSection.getBoundingClientRect().top + window.scrollY - 100;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }, 100);
+            
             showToast("تم حساب الماكروز بنجاح! 🎯");
         });
 
@@ -803,41 +810,38 @@
             });
 
             filtered.forEach((recipe, index) => {
-                // Determine badge style
                 const badgeClass = recipe.cals < 300 ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-amber-100 text-amber-700 border-amber-200';
                 
                 const card = `
-                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 group opacity-0" style="animation: fadeIn 0.5s ease-out ${index * 0.1}s forwards;">
-                        <div class="relative h-56 overflow-hidden">
-                            <img src="${recipe.img}" alt="${recipe.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm md:hover:shadow-xl transition-all duration-300 opacity-0" style="animation: fadeIn 0.4s ease-out ${index * 0.1}s forwards;">
+                        <div class="relative h-48 md:h-56 overflow-hidden">
+                            <img src="${recipe.img}" alt="${recipe.title}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                             
-                            <!-- Badges -->
-                            <div class="absolute top-4 right-4 ${badgeClass} border px-3 py-1.5 rounded-full text-xs font-black shadow-sm flex items-center gap-1">
+                            <div class="absolute top-3 right-3 ${badgeClass} border px-2.5 py-1 rounded-full text-[10px] md:text-xs font-black shadow-sm flex items-center gap-1">
                                 <i class="fa-solid fa-fire text-[10px]"></i> ${recipe.cals} سعر
                             </div>
-                            <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur text-dark px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-md transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur text-dark px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold flex items-center gap-1 shadow-sm">
                                 <i class="fa-regular fa-clock text-primary"></i> ${recipe.time}
                             </div>
                         </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-black text-dark mb-5 line-clamp-1 group-hover:text-primary transition-colors">${recipe.title}</h3>
+                        <div class="p-5 md:p-6">
+                            <h3 class="text-base md:text-lg font-black text-dark mb-4 line-clamp-1">${recipe.title}</h3>
                             
-                            <!-- Macros -->
-                            <div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
                                 <div class="text-center w-1/3">
-                                    <span class="block text-[11px] text-gray-500 font-bold mb-1">بروتين</span>
-                                    <span class="font-black text-blue-600">${recipe.pro}g</span>
+                                    <span class="block text-[10px] text-gray-500 font-bold mb-0.5">بروتين</span>
+                                    <span class="font-black text-sm text-blue-600">${recipe.pro}g</span>
                                 </div>
-                                <div class="w-px h-8 bg-gray-200"></div>
+                                <div class="w-px h-6 bg-gray-200"></div>
                                 <div class="text-center w-1/3">
-                                    <span class="block text-[11px] text-gray-500 font-bold mb-1">كارب</span>
-                                    <span class="font-black text-amber-600">${recipe.carb}g</span>
+                                    <span class="block text-[10px] text-gray-500 font-bold mb-0.5">كارب</span>
+                                    <span class="font-black text-sm text-amber-600">${recipe.carb}g</span>
                                 </div>
-                                <div class="w-px h-8 bg-gray-200"></div>
+                                <div class="w-px h-6 bg-gray-200"></div>
                                 <div class="text-center w-1/3">
-                                    <span class="block text-[11px] text-gray-500 font-bold mb-1">دهون</span>
-                                    <span class="font-black text-rose-500">${recipe.fat}g</span>
+                                    <span class="block text-[10px] text-gray-500 font-bold mb-0.5">دهون</span>
+                                    <span class="font-black text-sm text-rose-500">${recipe.fat}g</span>
                                 </div>
                             </div>
                         </div>
@@ -847,30 +851,30 @@
             });
         }
 
-        // Initialize recipes
         renderRecipes();
 
         // Recipe Filter Logic
         const filterBtns = document.querySelectorAll('.filter-btn');
         filterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                // Reset all buttons
                 filterBtns.forEach(b => {
                     b.classList.remove('bg-dark', 'text-white', 'shadow-md', 'active');
                     if(b.dataset.filter === 'under400') {
-                        b.className = 'filter-btn bg-red-50 text-red-600 border border-red-100 px-6 py-2.5 rounded-full font-bold hover:bg-red-100 transition flex items-center gap-2';
+                        b.className = 'filter-btn shrink-0 bg-red-50 text-red-600 border border-red-100 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-red-100 transition flex items-center gap-2';
                     } else {
-                        b.className = 'filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full font-bold hover:bg-gray-50 transition';
+                        b.className = 'filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition';
                     }
                 });
                 
-                // Style active button
                 const target = e.currentTarget;
                 if(target.dataset.filter === 'under400') {
-                    target.className = 'filter-btn active bg-red-500 text-white shadow-md border border-red-500 px-6 py-2.5 rounded-full font-bold transition flex items-center gap-2';
+                    target.className = 'filter-btn active shrink-0 bg-red-500 text-white shadow-md border border-red-500 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold transition flex items-center gap-2';
                 } else {
-                    target.className = 'filter-btn active bg-dark text-white px-6 py-2.5 rounded-full font-bold shadow-md transition';
+                    target.className = 'filter-btn active shrink-0 bg-dark text-white px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold shadow-md transition';
                 }
+
+                // Scroll the clicked filter button into view on mobile
+                target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
                 renderRecipes(target.dataset.filter);
             });

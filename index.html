@@ -425,58 +425,43 @@
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary rounded-full mix-blend-overlay filter blur-[100px] opacity-20"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-12 md:mb-16 fade-in">
+            <div class="text-center mb-10 md:mb-14 fade-in">
                 <span class="text-secondary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">قصص تلهمك</span>
                 <h2 class="text-2xl md:text-5xl font-black mb-4">أبطال دكتور أماني 🏆</h2>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto mb-4">آراء حقيقية ونتائج مبهرة من عملائنا عبر رسائل الواتساب</p>
+                <div class="flex items-center justify-center gap-2 text-emerald-400 text-xs md:text-sm font-bold animate-pulse">
+                    <i class="fa-solid fa-arrows-left-right"></i> اسحب يميناً ويساراً للمشاهدة
+                </div>
             </div>
 
-            <!-- Mobile friendly snap-scroll on small screens, grid on large -->
-            <div class="flex overflow-x-auto hide-scrollbar md:grid md:grid-cols-3 gap-4 md:gap-8 pb-4 snap-x snap-mandatory">
+            <!-- Image Gallery for Real Chat Screenshots -->
+            <div class="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 pb-6 snap-x snap-mandatory items-center px-4 md:px-0">
                 
-                <!-- Review 1 -->
-                <div class="bg-slate-800 p-6 md:p-8 rounded-[2rem] border border-slate-700 w-80 md:w-auto shrink-0 snap-center">
-                    <div class="flex text-amber-400 mb-4 text-xs md:text-sm">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                    </div>
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 italic">"كنت بعاني من ثبات الوزن، مع دكتور أماني قدرت أخس 8 كيلو في شهرين بدون حرمان. الوصفات مريحة جداً."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-primary font-bold">س</div>
-                        <div>
-                            <h4 class="font-bold text-sm md:text-base">سارة م.</h4>
-                            <p class="text-xs text-gray-500">خسارة وزن (-8 كجم)</p>
-                        </div>
-                    </div>
+                <!-- Review Image 1 -->
+                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
+                    <img src="review/1.jpg" alt="رأي عميل 1" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+1'">
                 </div>
 
-                <!-- Review 2 -->
-                <div class="bg-slate-800 p-6 md:p-8 rounded-[2rem] border border-slate-700 w-80 md:w-auto shrink-0 snap-center transform md:-translate-y-4">
-                    <div class="flex text-amber-400 mb-4 text-xs md:text-sm">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                    </div>
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 italic">"المتابعة اليومية على الواتساب بتدي حافز رهيب، والتمارين مناسبة لوقتي الضيق كطالب. العضلات زادت جداً."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">أ</div>
-                        <div>
-                            <h4 class="font-bold text-sm md:text-base">أحمد ك.</h4>
-                            <p class="text-xs text-gray-500">بناء عضلات</p>
-                        </div>
-                    </div>
+                <!-- Review Image 2 -->
+                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
+                    <img src="review/2.jpg" alt="رأي عميل 2" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+2'">
                 </div>
 
-                <!-- Review 3 -->
-                <div class="bg-slate-800 p-6 md:p-8 rounded-[2rem] border border-slate-700 w-80 md:w-auto shrink-0 snap-center">
-                    <div class="flex text-amber-400 mb-4 text-xs md:text-sm">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                    </div>
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 italic">"كان عندي مشاكل هضم. بتغيير أسلوب الأكل مع دكتور أماني، التحاليل اتحسنت وطاقتي زادت الضعف."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 font-bold">م</div>
-                        <div>
-                            <h4 class="font-bold text-sm md:text-base">مريم خ.</h4>
-                            <p class="text-xs text-gray-500">تغذية علاجية</p>
-                        </div>
-                    </div>
+                <!-- Review Image 3 -->
+                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
+                    <img src="review/3.jpg" alt="رأي عميل 3" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+3'">
                 </div>
+
+                <!-- Review Image 4 -->
+                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
+                    <img src="review/4.jpg" alt="رأي عميل 4" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+4'">
+                </div>
+
+                <!-- Review Image 5 -->
+                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
+                    <img src="review/5.jpg" alt="رأي عميل 5" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+5'">
+                </div>
+
             </div>
         </div>
     </section>

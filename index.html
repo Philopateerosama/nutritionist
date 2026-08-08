@@ -203,9 +203,15 @@
 
                 <!-- Image/Visual -->
                 <div class="w-full lg:w-1/2 relative fade-in mt-6 md:mt-0" style="animation-delay: 0.3s;">
-                    <div class="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 md:border-8 border-white">
-                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Healthy Food and Lifestyle" class="w-full object-cover h-[300px] sm:h-[400px] lg:h-[600px]">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    <div class="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 md:border-8 border-white bg-gray-100">
+                        <!-- تم إضافة ID للفيديو وزرار الصوت وإلغاء التكرار والتشغيل التلقائي -->
+                        <video id="hero-vid" src="hero-video.mp4" playsinline class="w-full object-cover h-[300px] sm:h-[400px] lg:h-[600px]"></video>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+                        
+                        <!-- زرار كتم/تشغيل الصوت -->
+                        <button id="mute-btn" class="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white w-10 h-10 flex items-center justify-center rounded-full z-30 backdrop-blur transition-all border border-white/20">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
                     </div>
                     
                     <!-- Floating Cards - Mobile Optimized -->
@@ -615,7 +621,7 @@
             </div>
 
             <!-- Medication Types -->
-            <h3 class="font-black text-xl text-dark mb-6 text-center md:text-right">أشهر الأنواع المتوفرة بالسوق (في مصر والوطن العربي)</h3>
+            <h3 class="font-black text-xl text-dark mb-6 text-center md:text-right">أشهر الأنواع المتوفرة بالسوق</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mb-12 fade-in" style="animation-delay: 0.2s;">
                 <!-- Ozempic -->
                 <div class="bg-white p-6 rounded-3xl border-2 border-blue-100 hover:border-blue-300 shadow-lg transition-all relative overflow-hidden group">
@@ -777,33 +783,9 @@
             </div>
 
             <!-- Image Gallery for Real Chat Screenshots -->
-            <div class="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 pb-6 snap-x snap-mandatory items-center px-4 md:px-0">
-                
-                <!-- Review Image 1 -->
-                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
-                    <img src="review/1.jpg" alt="رأي عميل 1" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+1'">
-                </div>
-
-                <!-- Review Image 2 -->
-                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
-                    <img src="review/2.jpg" alt="رأي عميل 2" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+2'">
-                </div>
-
-                <!-- Review Image 3 -->
-                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
-                    <img src="review/3.jpg" alt="رأي عميل 3" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+3'">
-                </div>
-
-                <!-- Review Image 4 -->
-                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
-                    <img src="review/4.jpg" alt="رأي عميل 4" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+4'">
-                </div>
-
-                <!-- Review Image 5 -->
-                <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
-                    <img src="review/5.jpg" alt="رأي عميل 5" class="w-full max-h-[500px] object-contain rounded-2xl" onerror="this.src='https://placehold.co/400x600/1e293b/ffffff?text=سكرين+شوت+5'">
-                </div>
-
+            <div id="reviews-gallery" class="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 pb-6 snap-x snap-mandatory items-center px-4 md:px-0">
+                <!-- الصور سيتم تحميلها هنا تلقائياً بواسطة الجافاسكريبت -->
+                <div id="reviews-loading" class="w-full text-center text-gray-500 py-10 font-bold animate-pulse">جاري تحميل آراء العملاء...</div>
             </div>
         </div>
     </section>
@@ -919,6 +901,53 @@
         <span id="toast-msg" class="font-bold text-xs md:text-sm"></span>
     </div>
 
+    <!-- Recipe Details Modal -->
+    <div id="recipe-modal" class="fixed inset-0 z-[120] hidden flex items-end sm:items-center justify-center sm:p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeRecipeModal()"></div>
+        <div class="bg-white w-full sm:max-w-lg rounded-t-[2rem] sm:rounded-3xl shadow-2xl z-10 overflow-hidden transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300 flex flex-col max-h-[90vh]" id="recipe-modal-content">
+            <div class="relative h-48 sm:h-64 shrink-0">
+                <img id="modal-img" src="" alt="Recipe" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+                <button onclick="closeRecipeModal()" class="absolute top-4 right-4 bg-white/20 hover:bg-white/40 backdrop-blur text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 md:p-8 overflow-y-auto hide-scrollbar bg-white">
+                <h3 id="modal-title" class="text-xl md:text-2xl font-black text-dark mb-5 leading-tight"></h3>
+                
+                <!-- Macros Row in Modal -->
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100 mb-6">
+                    <div class="text-center w-1/3">
+                        <span class="block text-[10px] text-gray-500 font-bold mb-0.5">بروتين</span>
+                        <span id="modal-pro" class="font-black text-sm md:text-base text-blue-600"></span>
+                    </div>
+                    <div class="w-px h-6 bg-gray-200"></div>
+                    <div class="text-center w-1/3">
+                        <span class="block text-[10px] text-gray-500 font-bold mb-0.5">كارب</span>
+                        <span id="modal-carb" class="font-black text-sm md:text-base text-amber-600"></span>
+                    </div>
+                    <div class="w-px h-6 bg-gray-200"></div>
+                    <div class="text-center w-1/3">
+                        <span class="block text-[10px] text-gray-500 font-bold mb-0.5">دهون</span>
+                        <span id="modal-fat" class="font-black text-sm md:text-base text-rose-500"></span>
+                    </div>
+                </div>
+
+                <!-- Ingredients List -->
+                <h4 class="font-black text-lg text-primary mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-sm"><i class="fa-solid fa-scale-balanced"></i></div>
+                    المقادير (بالميزان)
+                </h4>
+                <ul id="modal-ingredients" class="space-y-3 mb-6">
+                    <!-- Populated by JS -->
+                </ul>
+                
+                <button onclick="closeRecipeModal()" class="w-full bg-gray-100 text-dark py-4 rounded-xl font-bold text-sm hover:bg-gray-200 transition">إغلاق وتصفح المزيد</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Set year
         document.getElementById('year').textContent = new Date().getFullYear();
@@ -952,6 +981,59 @@
         mobileLinks.forEach(link => {
             link.addEventListener('click', toggleMenu);
         });
+
+        // --- Video Sound Control & Scroll Play ---
+        const videoEl = document.getElementById('hero-vid');
+        const muteBtn = document.getElementById('mute-btn');
+        if(muteBtn && videoEl) {
+            // Toggle Mute/Unmute manually
+            muteBtn.addEventListener('click', () => {
+                videoEl.muted = !videoEl.muted;
+                if(videoEl.muted) {
+                    muteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                } else {
+                    muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                }
+            });
+
+            // Intersection Observer: يراقب الفيديو ولما يظهر 50% منه في الشاشة يشغله
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5 
+            };
+
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // محاولة تشغيل الفيديو بصوت
+                        videoEl.muted = false; 
+                        const playPromise = videoEl.play();
+                        
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {
+                                // المتصفح وافق يشتغل بصوت
+                                muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                            }).catch(error => {
+                                // المتصفح رفض (بسبب سياسة منع الصوت التلقائي)، هنشغله صامت كبديل
+                                videoEl.muted = true;
+                                const mutedPlayPromise = videoEl.play();
+                                // السطر ده عشان نمنع ظهور Error لو الفيديو مش موجود في الـ Canvas
+                                if (mutedPlayPromise !== undefined) {
+                                    mutedPlayPromise.catch(e => console.warn("ملف الفيديو غير موجود حالياً في بيئة المعاينة."));
+                                }
+                                muteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                            });
+                        }
+                    } else {
+                        // إيقاف الفيديو لما يختفي من الشاشة
+                        videoEl.pause();
+                    }
+                });
+            }, observerOptions);
+
+            videoObserver.observe(videoEl);
+        }
 
         // --- Navbar Scroll Effect ---
         const navbar = document.getElementById('navbar');
@@ -997,8 +1079,7 @@
             });
         });
 
-        // --- STREAMING_CHUNK:Calculator and BMI Logic... ---
-        // --- Macro & BMI Calculator Logic ---
+        // --- Macro Calculator Logic ---
         document.getElementById('macro-form').addEventListener('submit', function(e) {
             e.preventDefault();
             // Blurs active input to close mobile keyboard automatically
@@ -1125,15 +1206,110 @@
             window.requestAnimationFrame(step);
         }
 
-        // --- STREAMING_CHUNK:Recipes Logic Implementation... ---
         // --- Recipes Data & Rendering ---
         const recipesData = [
-            { id: 1, title: "طاسة البيض بالخضار والجبنة القريش", category: "breakfast", cals: 290, pro: 22, carb: 5, fat: 18, img: "https://images.unsplash.com/photo-1525385133512-2f3bdd039054?ixlib=rb-4.0.3&w=600&q=80", time: "10 دقائق" },
-            { id: 2, title: "بانكيك الشوفان والموز", category: "breakfast", cals: 340, pro: 15, carb: 48, fat: 8, img: "https://images.unsplash.com/photo-1528207776546-384cb1119b27?ixlib=rb-4.0.3&w=600&q=80", time: "15 دقيقة" },
-            { id: 3, title: "شيش طاووق مع أرز مبهر", category: "lunch", cals: 380, pro: 38, carb: 32, fat: 7, img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&w=600&q=80", time: "30 دقيقة" },
-            { id: 4, title: "صينية سمك فيليه بالليمون", category: "lunch", cals: 310, pro: 40, carb: 15, fat: 9, img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-4.0.3&w=600&q=80", time: "25 دقيقة" },
-            { id: 5, title: "سلطة التونة بالذرة", category: "dinner", cals: 260, pro: 28, carb: 18, fat: 6, img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&w=600&q=80", time: "5 دقائق" },
-            { id: 6, title: "زبادي يوناني بالتوت واللوز", category: "dinner", cals: 220, pro: 18, carb: 12, fat: 9, img: "https://images.unsplash.com/photo-1488477181946-6428a0291777?ixlib=rb-4.0.3&w=600&q=80", time: "دقيقتين" }
+            // الإفطار
+            { 
+                id: 1, title: "الفول المدمس بالليمون والكمون", category: "breakfast", cals: 355, pro: 16.5, carb: 53, fat: 7.5, img: "food/foul.jpg", time: "10 دقائق",
+                ingredients: [
+                    "150 جرام فول مدمس مسلوق (سادة)",
+                    "5 جرام زيت زيتون بكر ممتاز",
+                    "50 جرام طماطم مقطعة",
+                    "50 جرام خبز بلدي (حوالي نصف رغيف)",
+                    "عصير ليمون، كمون، ملح (حسب الرغبة)"
+                ]
+            },
+            { 
+                id: 2, title: "طاسة البيض بالخضروات وجبن القريش", category: "breakfast", cals: 310, pro: 25, carb: 22, fat: 12.5, img: "food/eggs_cottage.jpg", time: "10 دقائق",
+                ingredients: [
+                    "100 جرام بيض كامل (حوالي بيضتين)",
+                    "60 جرام جبن قريش قليل الملح",
+                    "100 جرام بصل، فلفل ألوان، طماطم مجتمعة",
+                    "2 جرام رذاذ زيت زيتون",
+                    "30 جرام خبز بلدي"
+                ]
+            },
+            { 
+                id: 3, title: "الشوفان بالحليب والموز", category: "breakfast", cals: 325, pro: 13, carb: 51, fat: 7, img: "food/oats_banana.jpg", time: "5 دقائق",
+                ingredients: [
+                    "45 جرام رقائق الشوفان الكاملة",
+                    "150 جرام حليب بقري خالي الدسم",
+                    "60 جرام موز ناضج",
+                    "10 جرام لوز نيء",
+                    "قرفة ومحلي بدون سعرات (حسب الرغبة)"
+                ]
+            },
+            
+            // الغداء
+            { 
+                id: 4, title: "كشري مصري عالي البروتين", category: "lunch", cals: 445, pro: 21, carb: 82, fat: 3.5, img: "food/koshari.jpg", time: "30 دقيقة",
+                ingredients: [
+                    "50 جرام عدس بجبة (نيء)",
+                    "30 جرام مكرونة قمح كامل (نيئة)",
+                    "30 جرام أرز بسمتي أو مصري (نيء)",
+                    "40 جرام حمص مسلوق",
+                    "100 جرام صلصة طماطم مسبكة بالثوم والخل (بدون زيت)",
+                    "15 جرام بصل مقرمش محمص في القلاية الهوائية"
+                ]
+            },
+            { 
+                id: 5, title: "المكرونة بالبشاميل (الإصدار الصحي)", category: "lunch", cals: 420, pro: 36, carb: 50, fat: 7.5, img: "food/bechamel.jpg", time: "40 دقيقة",
+                ingredients: [
+                    "60 جرام مكرونة قلم (نيئة)",
+                    "100 جرام لحم مفروم (5% دهن)",
+                    "150 جرام حليب خالي الدسم",
+                    "15 جرام دقيق شوفان",
+                    "بصل مفروم، قرفة، جوزة الطيب للتعصيج والتنكيه"
+                ]
+            },
+            { 
+                id: 6, title: "الكبدة الإسكندراني للدايت", category: "lunch", cals: 425, pro: 40, carb: 33, fat: 12, img: "food/liver.jpg", time: "15 دقيقة",
+                ingredients: [
+                    "150 جرام كبدة بقري مقطعة رفيعاً",
+                    "80 جرام فلفل أخضر وحار",
+                    "ثوم، كمون، كزبرة، خل، ليمون للتتبيل",
+                    "5 جرام زيت نباتي أو زيت زيتون",
+                    "50 جرام خبز بلدي"
+                ]
+            },
+            { 
+                id: 7, title: "صينية البطاطس بالفراخ في الفرن", category: "lunch", cals: 360, pro: 36, carb: 32, fat: 8, img: "food/chicken_potato.jpg", time: "45 دقيقة",
+                ingredients: [
+                    "150 جرام دجاجة منزوعة الجلد (ربع دجاجة - صدر لحم صافي)",
+                    "150 جرام بطاطس مقطعة حلقات",
+                    "100 جرام بصل، طماطم، فلفل أخضر",
+                    "ملح، فلفل أسود، بهارات دجاج للتتبيل"
+                ]
+            },
+            
+            // العشاء (والسلطات)
+            { 
+                id: 8, title: "التونة بالطماطم والبصل", category: "dinner", cals: 210, pro: 25, carb: 20, fat: 2, img: "food/tuna_salad.jpg", time: "5 دقائق",
+                ingredients: [
+                    "100 جرام تونة معلبة في الماء (وزن مصفى)",
+                    "80 جرام بصل مفروم وطماطم",
+                    "عصير ليمون وكمون (حسب الرغبة)",
+                    "30 جرام توست أسمر"
+                ]
+            },
+            { 
+                id: 9, title: "سلطة سيزر بالدجاج", category: "dinner", cals: 350, pro: 39, carb: 17, fat: 12.5, img: "food/caesar_salad.jpg", time: "15 دقيقة",
+                ingredients: [
+                    "100 جرام صدور دجاج مشوية (قطع)",
+                    "150 جرام خس أو كابوتشي مقطع",
+                    "30 جرام قطع توست مدهونة بـ 3 جرام زبدة ومحمصة",
+                    "الدريسينج: 10 جم مايونيز لايت، 5 جم مستردة، ليمون",
+                    "10 جرام جبن بارميزان مبشور، فص ثوم مفروم، ملح وفلفل"
+                ]
+            },
+            { 
+                id: 10, title: "جبن قريش بالبطيخ", category: "dinner", cals: 195, pro: 16, carb: 25, fat: 1.5, img: "food/watermelon_cheese.jpg", time: "3 دقائق",
+                ingredients: [
+                    "120 جرام جبن قريش",
+                    "250 جرام بطيخ طازج مقطع",
+                    "نعناع طازج للتزيين"
+                ]
+            }
         ];
 
         const recipeContainer = document.getElementById('recipe-container');
@@ -1151,10 +1327,10 @@
                 const badgeClass = recipe.cals < 300 ? 'bg-green-100 text-green-700 border-green-200' : 'bg-amber-100 text-amber-700 border-amber-200';
                 
                 const card = `
-                    <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 opacity-0" style="animation: fadeIn 0.4s ease-out ${index * 0.1}s forwards;">
-                        <div class="relative h-48 md:h-56 overflow-hidden">
-                            <img src="${recipe.img}" alt="${recipe.title}" class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div onclick="openRecipeModal(${recipe.id})" class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 cursor-pointer group flex flex-col" style="animation: fadeIn 0.4s ease-out ${index * 0.1}s forwards;">
+                        <div class="relative h-48 md:h-56 overflow-hidden shrink-0">
+                            <img src="${recipe.img}" alt="${recipe.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/f8fafc/94a3b8?text=صورة+الوجبة'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"></div>
                             
                             <div class="absolute top-3 right-3 ${badgeClass} border px-2.5 py-1 rounded-full text-[10px] md:text-xs font-black shadow-sm flex items-center gap-1">
                                 <i class="fa-solid fa-fire text-[10px]"></i> ${recipe.cals} سعر
@@ -1162,11 +1338,16 @@
                             <div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur text-dark px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold flex items-center gap-1 shadow-sm">
                                 <i class="fa-regular fa-clock text-primary"></i> ${recipe.time}
                             </div>
-                        </div>
-                        <div class="p-5 md:p-6">
-                            <h3 class="text-base md:text-lg font-black text-dark mb-4 line-clamp-1">${recipe.title}</h3>
                             
-                            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                            <!-- Click indicator overlay -->
+                            <div class="absolute inset-0 bg-primary/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-white text-primary px-4 py-2 rounded-full font-bold text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">عرض المقادير</span>
+                            </div>
+                        </div>
+                        <div class="p-5 md:p-6 flex-grow flex flex-col justify-between">
+                            <h3 class="text-base md:text-lg font-black text-dark mb-4 line-clamp-2">${recipe.title}</h3>
+                            
+                            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100 mt-auto">
                                 <div class="text-center w-1/3">
                                     <span class="block text-[10px] text-gray-500 font-bold mb-0.5">بروتين</span>
                                     <span class="font-black text-sm text-blue-600">${recipe.pro}g</span>
@@ -1190,6 +1371,49 @@
         }
 
         renderRecipes();
+
+        // --- Recipe Modal Logic ---
+        const recipeModal = document.getElementById('recipe-modal');
+        const modalContent = document.getElementById('recipe-modal-content');
+
+        function openRecipeModal(id) {
+            const recipe = recipesData.find(r => r.id === id);
+            if(!recipe) return;
+
+            document.getElementById('modal-img').src = recipe.img;
+            document.getElementById('modal-img').onerror = function() { this.src='https://placehold.co/600x400/1e293b/ffffff?text=صورة+الوجبة'; };
+            document.getElementById('modal-title').innerText = recipe.title;
+            document.getElementById('modal-pro').innerText = recipe.pro + 'g';
+            document.getElementById('modal-carb').innerText = recipe.carb + 'g';
+            document.getElementById('modal-fat').innerText = recipe.fat + 'g';
+
+            const ingredientsList = document.getElementById('modal-ingredients');
+            ingredientsList.innerHTML = '';
+            recipe.ingredients.forEach(ing => {
+                ingredientsList.innerHTML += `
+                    <li class="flex items-start gap-2 text-sm md:text-base text-gray-600 font-medium">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></div>
+                        <span>${ing}</span>
+                    </li>
+                `;
+            });
+
+            recipeModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            
+            // Trigger animation
+            setTimeout(() => {
+                modalContent.classList.remove('translate-y-full', 'sm:scale-95');
+            }, 10);
+        }
+
+        function closeRecipeModal() {
+            modalContent.classList.add('translate-y-full', 'sm:scale-95');
+            setTimeout(() => {
+                recipeModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
 
         // Recipe Filter Logic
         const filterBtns = document.querySelectorAll('.filter-btn');
@@ -1217,6 +1441,48 @@
                 renderRecipes(target.dataset.filter);
             });
         });
+
+        // --- Auto-load reviews from review folder ---
+        const reviewsGallery = document.getElementById('reviews-gallery');
+        let reviewIndex = 1;
+
+        function loadNextReview() {
+            // محاولة تحميل الصورة بالترتيب
+            const imgPath = `review/${reviewIndex}.jpg`;
+            const img = new Image();
+            
+            img.onload = function() {
+                // إذا تم العثور على الصورة (أول صورة)، نمسح نص "جاري التحميل"
+                if (reviewIndex === 1 && document.getElementById('reviews-loading')) {
+                    reviewsGallery.innerHTML = '';
+                }
+
+                // إضافة الكارت الخاص بالصورة
+                const cardHTML = `
+                    <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
+                        <img src="${imgPath}" alt="رأي عميل ${reviewIndex}" class="w-full max-h-[500px] object-contain rounded-2xl">
+                    </div>
+                `;
+                reviewsGallery.insertAdjacentHTML('beforeend', cardHTML);
+                
+                reviewIndex++;
+                loadNextReview(); // محاولة تحميل الصورة اللي بعدها
+            };
+
+            img.onerror = function() {
+                // إذا لم يتم العثور على الصورة، تتوقف الدورة هنا (معنى ذلك أننا وصلنا لآخر صورة)
+                if (reviewIndex === 1 && document.getElementById('reviews-loading')) {
+                    reviewsGallery.innerHTML = '<div class="w-full text-center text-gray-500 py-10">لا توجد صور حالياً. سيتم إضافتها قريباً.</div>';
+                }
+            };
+
+            img.src = imgPath;
+        }
+
+        // بدء تحميل الصور عند فتح الصفحة
+        if(reviewsGallery) {
+            loadNextReview();
+        }
 
     </script>
 </body>

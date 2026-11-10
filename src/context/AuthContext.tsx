@@ -82,6 +82,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             createdAt: new Date().toISOString()
           });
         }
+      } else {
+        // Upgrade legacy article images to appropriate medical/hydration photos
+        articlesSnap.forEach(async (d) => {
+          const data = d.data();
+          if (data.imageUrl && data.imageUrl.includes('/assets/')) {
+            const title = data.title || '';
+            let newUrl = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80';
+            if (title.includes('GLP-1') || title.includes('حقن')) {
+              newUrl = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80';
+            } else if (title.includes('الماء') || title.includes('الترطيب')) {
+              newUrl = 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=800&auto=format&fit=crop&q=80';
+            }
+            try {
+              await setDoc(doc(db, 'articles', d.id), { imageUrl: newUrl }, { merge: true });
+            } catch (err) {
+              console.warn('Article image migration skipped:', err);
+            }
+          }
+        });
       }
 
       const reviewsSnap = await getDocs(collection(db, 'reviews'));

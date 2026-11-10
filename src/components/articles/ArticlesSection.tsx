@@ -6,7 +6,8 @@ import {
   onSnapshot, 
   addDoc, 
   deleteDoc, 
-  doc 
+  doc,
+  updateDoc 
 } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from '../../lib/errorHandler';
 import { Article } from '../../types';
@@ -22,6 +23,24 @@ import {
   Calendar,
   Share2
 } from 'lucide-react';
+
+// Maps articles to proper medical and health imagery (fixes previously seeded food images)
+export const getCorrectArticleImage = (title: string, currentUrl?: string): string => {
+  const t = (title || '').toLowerCase();
+  if (t.includes('glp') || t.includes('حقن') || t.includes('أوزمبيك') || t.includes('عضلات') || t.includes('تخسيس')) {
+    return 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80';
+  }
+  if (t.includes('ماء') || t.includes('ترطيب') || t.includes('عطش') || t.includes('بشرة') || t.includes('شرب')) {
+    return 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=800&auto=format&fit=crop&q=80';
+  }
+  if (t.includes('حرمان') || t.includes('أسلوب حياة') || t.includes('مستدام') || t.includes('دايت')) {
+    return 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80';
+  }
+  if (currentUrl && !currentUrl.includes('/assets/') && currentUrl.startsWith('http')) {
+    return currentUrl;
+  }
+  return 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80';
+};
 
 export const ArticlesSection: React.FC = () => {
   const { user, isAdmin } = useAuth();
@@ -48,7 +67,19 @@ export const ArticlesSection: React.FC = () => {
       (snapshot) => {
         const loaded: Article[] = [];
         snapshot.forEach((docSnap) => {
-          loaded.push({ id: docSnap.id, ...(docSnap.data() as Omit<Article, 'id'>) });
+          const data = docSnap.data() as Omit<Article, 'id'>;
+          const correctImg = getCorrectArticleImage(data.title, data.imageUrl);
+
+          // If Firestore has the old food image, auto-update it in Firestore
+          if (data.imageUrl !== correctImg && (data.imageUrl?.includes('/assets/') || !data.imageUrl?.startsWith('http'))) {
+            updateDoc(doc(db, 'articles', docSnap.id), { imageUrl: correctImg }).catch(() => {});
+          }
+
+          loaded.push({ 
+            id: docSnap.id, 
+            ...data,
+            imageUrl: correctImg 
+          });
         });
 
         if (loaded.length === 0) {

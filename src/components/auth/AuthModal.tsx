@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Lock, Mail, User as UserIcon, Shield, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import { 
+  Lock, 
+  Mail, 
+  User as UserIcon, 
+  Shield, 
+  Sparkles, 
+  CheckCircle2, 
+  ArrowRight,
+  AlertTriangle,
+  Copy,
+  Check,
+  ExternalLink,
+  Globe
+} from 'lucide-react';
 
 export const AuthModal: React.FC = () => {
   const { loginWithEmail, signupWithEmail, loginWithGoogle } = useAuth();
@@ -9,11 +22,25 @@ export const AuthModal: React.FC = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const currentHost = typeof window !== 'undefined' ? window.location.hostname : '';
+  const vercelDomain = 'nutritionist-zeta-eight.vercel.app';
+
+  const copyText = (text: string, key: string) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 2500);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setErrorCode(null);
     setLoading(true);
 
     try {
@@ -27,8 +54,8 @@ export const AuthModal: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Login/Signup error:', err);
-      const codeStr = err?.code ? ` (${err.code})` : '';
-      setError((err.message || 'حدث خطأ، يرجى المحاولة ثانية') + codeStr);
+      setErrorCode(err?.code || null);
+      setError(err?.message || 'حدث خطأ، يرجى المحاولة ثانية');
     } finally {
       setLoading(false);
     }
@@ -36,13 +63,14 @@ export const AuthModal: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     setError(null);
+    setErrorCode(null);
     setLoading(true);
     try {
       await loginWithGoogle();
     } catch (err: any) {
       console.error('Google Sign-in error:', err);
-      const codeStr = err?.code ? ` (${err.code})` : '';
-      setError((err.message || 'فشل تسجيل الدخول بحساب Google') + codeStr);
+      setErrorCode(err?.code || null);
+      setError(err?.message || 'فشل تسجيل الدخول بحساب Google');
     } finally {
       setLoading(false);
     }
@@ -135,9 +163,74 @@ export const AuthModal: React.FC = () => {
             </div>
           </div>
 
-          {error && (
+          {errorCode === 'auth/unauthorized-domain' && (
+            <div className="mb-6 p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-slate-800 shadow-sm animate-fadeIn">
+              <div className="flex items-center gap-2 mb-2 text-amber-800 font-black text-sm">
+                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                <span>مطلوب إضافة الدومين إلى Firebase Console لتفعيل جوجل</span>
+              </div>
+              <p className="text-xs text-slate-600 mb-3 leading-relaxed">
+                حماية Firebase تتطلب اعتماد النطاق (Authorized Domain) قبل السماح بتسجيل الدخول بـ Google. يمكنك نسخ الدومين وإضافته بضغطة زر:
+              </p>
+
+              {/* Current Domain Box */}
+              <div className="bg-white border border-amber-200 rounded-xl p-2.5 mb-2 flex items-center justify-between gap-2">
+                <div className="overflow-hidden">
+                  <span className="text-[10px] text-gray-400 block font-bold">دومين المعاينة الحالي:</span>
+                  <span className="text-xs font-mono font-bold text-slate-800 truncate block">{currentHost}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => copyText(currentHost, 'current')}
+                  className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shrink-0 transition cursor-pointer"
+                >
+                  {copiedKey === 'current' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedKey === 'current' ? 'تم النسخ!' : 'نسخ'}</span>
+                </button>
+              </div>
+
+              {/* Vercel Domain Box */}
+              <div className="bg-white border border-amber-200 rounded-xl p-2.5 mb-3 flex items-center justify-between gap-2">
+                <div className="overflow-hidden">
+                  <span className="text-[10px] text-gray-400 block font-bold">دومين موقعك على Vercel:</span>
+                  <span className="text-xs font-mono font-bold text-emerald-700 truncate block">{vercelDomain}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => copyText(vercelDomain, 'vercel')}
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center gap-1 shrink-0 transition cursor-pointer"
+                >
+                  {copiedKey === 'vercel' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedKey === 'vercel' ? 'تم النسخ!' : 'نسخ'}</span>
+                </button>
+              </div>
+
+              <div className="text-[11px] text-slate-600 bg-amber-100/70 p-3 rounded-xl space-y-1.5 mb-3">
+                <div className="font-bold text-amber-900">طريقة الإضافة في دقيقة واحدة:</div>
+                <div>1. افتح مشروع <b>eat-smart-83089</b> في Firebase Console</div>
+                <div>2. اذهب إلى <b>Authentication</b> ➔ تبويب <b>Settings</b> ➔ <b>Authorized domains</b></div>
+                <div>3. اضغط <b>Add domain</b> وألصق الدومين.</div>
+              </div>
+
+              <div className="pt-2 border-t border-amber-200 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsLogin(true);
+                    setError(null);
+                    setErrorCode(null);
+                  }}
+                  className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-black text-center transition cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                >
+                  <span>⚡ تسجيل الدخول بالبريد وكلمة المرور فوراً (يعمل مباشرة 100%)</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {error && errorCode !== 'auth/unauthorized-domain' && (
             <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl text-sm font-bold flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-rose-500" />
+              <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
               <span>{error}</span>
             </div>
           )}

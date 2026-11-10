@@ -7,7 +7,11 @@ import {
   onSnapshot, 
   query, 
   orderBy, 
-  limit 
+  limit,
+  doc,
+  updateDoc,
+  setDoc,
+  deleteDoc
 } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from '../../lib/errorHandler';
 import { UserProfile, UserReport } from '../../types';
@@ -24,7 +28,12 @@ import {
   ArrowLeft,
   Key,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  AlertTriangle,
+  Crown,
+  UserMinus,
+  X,
+  Check
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -46,6 +55,79 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [loading, setLoading] = useState(true);
   const [searchUser, setSearchUser] = useState('');
   const [selectedUserFilter, setSelectedUserFilter] = useState<string | null>(null);
+
+  // Role Management Modal State
+  const [roleModalUser, setRoleModalUser] = useState<UserProfile | null>(null);
+  const [targetRole, setTargetRole] = useState<'admin' | 'user' | null>(null);
+  const [isUpdatingRole, setIsUpdatingRole] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const openRoleConfirmModal = (targetUser: UserProfile, newRole: 'admin' | 'user') => {
+    setRoleModalUser(targetUser);
+    setTargetRole(newRole);
+    setFeedbackMessage(null);
+  };
+
+  const closeRoleModal = () => {
+    if (isUpdatingRole) return;
+    setRoleModalUser(null);
+    setTargetRole(null);
+    setFeedbackMessage(null);
+  };
+
+  const handleConfirmRoleChange = async () => {
+    if (!roleModalUser || !targetRole) return;
+    setIsUpdatingRole(true);
+    setFeedbackMessage(null);
+
+    try {
+      // 1. Update user profile document in Firestore
+      const userDocRef = doc(db, 'users', roleModalUser.id);
+      await updateDoc(userDocRef, { role: targetRole });
+
+      // 2. Sync admins collection
+      const adminDocRef = doc(db, 'admins', roleModalUser.id);
+      if (targetRole === 'admin') {
+        await setDoc(adminDocRef, {
+          uid: roleModalUser.id,
+          email: (roleModalUser.email || '').toLowerCase().trim(),
+          updatedAt: new Date().toISOString()
+        });
+      } else {
+        try {
+          await deleteDoc(adminDocRef);
+        } catch (delErr) {
+          console.warn('Admin doc delete ignored:', delErr);
+        }
+      }
+
+      // Optimistic update
+      setUsersList((prev) =>
+        prev.map((u) => (u.id === roleModalUser.id ? { ...u, role: targetRole } : u))
+      );
+
+      setFeedbackMessage({
+        type: 'success',
+        text: targetRole === 'admin' 
+          ? `تم ترقية ${roleModalUser.name} إلى أدمن ودكتور بنجاح! 👑` 
+          : `تم تنزيل ${roleModalUser.name} إلى مشترك عادي بنجاح.`
+      });
+
+      setTimeout(() => {
+        setRoleModalUser(null);
+        setTargetRole(null);
+        setFeedbackMessage(null);
+      }, 1300);
+    } catch (err: any) {
+      console.error('Error changing user role:', err);
+      setFeedbackMessage({
+        type: 'error',
+        text: err?.message || 'حدث خطأ أثناء تعديل الصلاحية، يرجى المحاولة مرة أخرى.'
+      });
+    } finally {
+      setIsUpdatingRole(false);
+    }
+  };
 
   useEffect(() => {
     if (!user || !isAdmin) return;
@@ -247,14 +329,45 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => onOpenChatWithUser(u.id, u.name)}
-                      className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition cursor-pointer shrink-0"
-                    >
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      <span>فتح الشات</span>
-                    </button>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {/* Role Toggle Button */}
+                      {u.role === 'admin' ? (
+                        <button
+                          type="button"
+                          disabled={u.id === user?.uid}
+                          onClick={() => openRoleConfirmModal(u, 'user')}
+                          className={`px-3 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition cursor-pointer border ${
+                            u.id === user?.uid
+                              ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-60'
+                              : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200 active:scale-95'
+                          }`}
+                          title={u.id === user?.uid ? 'حسابك الحالي مسجل كأدمن رئيسي' : 'تنزيل الصلاحية إلى مشترك عادي'}
+                        >
+                          <UserMinus className="w-3.5 h-3.5" />
+                          <span>تنزيل لمشترك</span>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => openRoleConfirmModal(u, 'admin')}
+                          className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-sm"
+                          title="ترقية المشترك إلى أدمن وطبيب"
+                        >
+                          <Crown className="w-3.5 h-3.5 text-amber-600" />
+                          <span>ترقية لأدمن</span>
+                        </button>
+                      )}
+
+                      {/* Chat Button */}
+                      <button
+                        type="button"
+                        onClick={() => onOpenChatWithUser(u.id, u.name)}
+                        className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>فتح الشات</span>
+                      </button>
+                    </div>
                   </div>
                 ))
               )}
@@ -313,6 +426,143 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
         </div>
 
+      {/* Role Change Confirmation Modal */}
+      {roleModalUser && targetRole && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200 font-sans">
+            
+            {/* Header */}
+            <div className={`p-6 text-white flex items-center justify-between ${
+              targetRole === 'admin'
+                ? 'bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800'
+                : 'bg-gradient-to-r from-rose-600 via-rose-700 to-rose-800'
+            }`}>
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-white/20 rounded-2xl">
+                  {targetRole === 'admin' ? (
+                    <Crown className="w-6 h-6 text-white" />
+                  ) : (
+                    <AlertTriangle className="w-6 h-6 text-white" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-black text-lg">
+                    {targetRole === 'admin' ? 'تأكيد الترقية إلى أدمن' : 'تأكيد التنزيل إلى مشترك'}
+                  </h3>
+                  <p className="text-xs text-white/80">تعديل صلاحيات الوصول والمتابعة</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={isUpdatingRole}
+                onClick={closeRoleModal}
+                className="p-1.5 rounded-xl hover:bg-white/20 transition cursor-pointer"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              {/* User Card */}
+              <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl flex items-center justify-between">
+                <div>
+                  <p className="font-black text-sm text-slate-800">{roleModalUser.name}</p>
+                  <p className="text-xs text-slate-400 font-mono" dir="ltr">{roleModalUser.email}</p>
+                </div>
+                <div className="text-left">
+                  <span className="text-[10px] text-gray-400 block font-bold">الصلاحية الجديدة:</span>
+                  <span className={`text-xs font-black px-2.5 py-1 rounded-full inline-block mt-0.5 ${
+                    targetRole === 'admin'
+                      ? 'bg-amber-100 text-amber-800'
+                      : 'bg-slate-200 text-slate-700'
+                  }`}>
+                    {targetRole === 'admin' ? '👑 أدمن / دكتور' : '👤 مشترك عادي'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Warning Explanation */}
+              <div className={`p-4 rounded-2xl text-xs font-medium leading-relaxed border ${
+                targetRole === 'admin'
+                  ? 'bg-amber-50/80 border-amber-200 text-amber-900'
+                  : 'bg-rose-50/80 border-rose-200 text-rose-900'
+              }`}>
+                {targetRole === 'admin' ? (
+                  <div>
+                    <p className="font-black mb-1">⚠️ تنبيه الصلاحيات:</p>
+                    <p>
+                      بترقية هذا الحساب إلى <b>أدمن</b>، سيتمكن المشترك من الدخول إلى لوحة التحكم، قراءة تقارير وقياسات جميع المشتركين، الرد على الشات المباشر نيابة عن الطبيب، وإضافة وتعديل وحذف وجبات ومقالات الموقع.
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="font-black mb-1">⚠️ تنبيه سحب الصلاحيات:</p>
+                    <p>
+                      بتنزيل الحساب إلى <b>مشترك عادي</b>، سيفقد هذا المستخدم فوراً إمكانية الدخول للوحة التحكم أو الرد على استشارات المشتركين أو تعديل محتوى الموقع، وسيصبح قادراً فقط على تصفح الموقع واستخدام الشات كمشترك عادي.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Feedback message */}
+              {feedbackMessage && (
+                <div className={`p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${
+                  feedbackMessage.type === 'success'
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                    : 'bg-rose-50 text-rose-800 border border-rose-200'
+                }`}>
+                  {feedbackMessage.type === 'success' ? (
+                    <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                  )}
+                  <span>{feedbackMessage.text}</span>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="pt-2 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  disabled={isUpdatingRole}
+                  onClick={closeRoleModal}
+                  className="px-5 py-2.5 rounded-xl text-xs font-black text-slate-600 hover:bg-gray-100 transition cursor-pointer"
+                >
+                  إلغاء التراجع
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isUpdatingRole}
+                  onClick={handleConfirmRoleChange}
+                  className={`px-6 py-2.5 rounded-xl text-xs font-black text-white shadow-md transition flex items-center gap-2 cursor-pointer disabled:opacity-50 ${
+                    targetRole === 'admin'
+                      ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20'
+                      : 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20'
+                  }`}
+                >
+                  {isUpdatingRole ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : targetRole === 'admin' ? (
+                    <>
+                      <Crown className="w-4 h-4" />
+                      <span>نعم، ترقية إلى أدمن</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserMinus className="w-4 h-4" />
+                      <span>نعم، تنزيل إلى مشترك</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      )}
       </div>
     </section>
   );

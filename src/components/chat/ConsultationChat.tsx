@@ -40,19 +40,24 @@ export const ConsultationChat: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [sending, setSending] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Determine current active chat target
   const currentChatId = isAdmin ? activeChatUserId : user?.uid;
 
-  // Auto-scroll to bottom of chat
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // Auto-scroll ONLY inside the chat container so the webpage doesn't scroll down
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior
+      });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    scrollToBottom('smooth');
+  }, [messages.length, currentChatId]);
 
   // For Doctor: Listen to all consultation threads in /chats
   useEffect(() => {
@@ -270,7 +275,7 @@ export const ConsultationChat: React.FC = () => {
             </div>
 
             {/* Messages Feed */}
-            <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-3.5 bg-slate-50/40">
+            <div ref={messagesContainerRef} className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-3.5 bg-slate-50/40 scroll-smooth">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6 text-gray-400 space-y-3">
                   <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -328,7 +333,6 @@ export const ConsultationChat: React.FC = () => {
                   );
                 })
               )}
-              <div ref={messagesEndRef} />
             </div>
 
             {/* Quick Prompts for regular user */}

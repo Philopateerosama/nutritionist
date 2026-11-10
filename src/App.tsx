@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AuthModal } from './components/auth/AuthModal';
 import { Navbar } from './components/navbar/Navbar';
@@ -18,6 +18,11 @@ import { MessageSquare, Sparkles } from 'lucide-react';
 const AppContent: React.FC = () => {
   const { user, loading, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('home');
+
+  // Ensure webpage starts cleanly at the top
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
 
   if (loading) {
     return (

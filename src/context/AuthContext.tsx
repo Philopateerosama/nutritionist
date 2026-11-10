@@ -172,7 +172,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginWithEmail = async (email: string, pass: string) => {
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), pass);
+      const cleanEmail = email.trim().toLowerCase();
+      if (!cleanEmail) {
+        throw new Error('يرجى إدخال البريد الإلكتروني');
+      }
+      if (!pass || pass.length < 6) {
+        throw new Error('كلمة المرور يجب أن لا تقل عن 6 أحرف أو أرقام');
+      }
+      await signInWithEmailAndPassword(auth, cleanEmail, pass);
     } catch (error: any) {
       handleAuthError(error);
     }
@@ -180,21 +187,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signupWithEmail = async (email: string, pass: string, name: string) => {
     try {
-      const res = await createUserWithEmailAndPassword(auth, email.trim(), pass);
+      const cleanEmail = email.trim().toLowerCase();
+      if (!name.trim()) {
+        throw new Error('يرجى إدخال الاسم بالكامل');
+      }
+      if (!cleanEmail) {
+        throw new Error('يرجى إدخال البريد الإلكتروني');
+      }
+      if (!pass || pass.length < 6) {
+        throw new Error('كلمة المرور يجب أن لا تقل عن 6 أحرف أو أرقام');
+      }
+
+      const res = await createUserWithEmailAndPassword(auth, cleanEmail, pass);
       if (res.user) {
         try {
-          await updateProfile(res.user, { displayName: name });
+          await updateProfile(res.user, { displayName: name.trim() });
         } catch (e) {
           console.warn('Profile name update skipped:', e);
         }
 
-        const emailLower = email.toLowerCase().trim();
-        const shouldBeAdmin = ADMIN_EMAILS.includes(emailLower);
+        const shouldBeAdmin = ADMIN_EMAILS.includes(cleanEmail);
 
         const newProfile: UserProfile = {
           id: res.user.uid,
-          name,
-          email: res.user.email || email,
+          name: name.trim(),
+          email: res.user.email || cleanEmail,
           role: shouldBeAdmin ? 'admin' : 'user',
           createdAt: new Date().toISOString()
         };
@@ -207,7 +224,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (shouldBeAdmin) {
             await setDoc(doc(db, 'admins', res.user.uid), {
               uid: res.user.uid,
-              email: emailLower,
+              email: cleanEmail,
               createdAt: new Date().toISOString()
             });
           }
@@ -289,14 +306,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const handleAuthError = (error: any) => {
     console.error('Firebase Auth Error:', error);
     const code = error?.code || '';
+    const currentHost = typeof window !== 'undefined' ? window.location.hostname : '';
     let msg = error?.message || 'حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.';
 
     if (code === 'auth/operation-not-allowed') {
       msg = 'طريقة تسجيل الدخول غير مفعلة في مشروع Firebase! يرجى فتح Firebase Console > Authentication > Sign-in method وتفعيل خيار (Email/Password) وخيار (Google).';
     } else if (code === 'auth/unauthorized-domain') {
-      msg = 'الدومين الحالي غير مضاف في قائمة النطاقات المصرح بها في Firebase! يرجى إضافته في Firebase Console > Authentication > Settings > Authorized domains.';
+      msg = `الدومين الحالي (${currentHost}) غير مضاف في قائمة النطاقات المصرح بها في Firebase!`;
     } else if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
-      msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+      msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى التأكد من كتابتها بشكل سليم.';
     } else if (code === 'auth/email-already-in-use') {
       msg = 'هذا البريد الإلكتروني مسجل بالفعل! اضغط على تبويب "تسجيل الدخول" في الأعلى للدخول بحسابك.';
     } else if (code === 'auth/weak-password') {
@@ -310,7 +328,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (code) {
       msg = `خطأ Firebase (${code}): ${error?.message || 'تأكد من إعدادات Authentication'}`;
     }
-    throw new Error(msg);
+
+    const customError: any = new Error(msg);
+    customError.code = code;
+    customError.hostname = currentHost;
+    throw customError;
   };
 
   return (

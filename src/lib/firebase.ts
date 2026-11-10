@@ -1,27 +1,23 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
-import fallbackConfig from '../../firebase-applet-config.json';
 
-// Support Vercel environment variables with fallback to config file
-export const activeConfig = {
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || fallbackConfig.projectId,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || fallbackConfig.appId,
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || fallbackConfig.apiKey,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || fallbackConfig.authDomain,
-  firestoreDatabaseId: import.meta.env.VITE_FIREBASE_DATABASE_ID || fallbackConfig.firestoreDatabaseId,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || fallbackConfig.storageBucket,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || fallbackConfig.messagingSenderId,
-  measurementId: fallbackConfig.measurementId || '',
+// Hardcoded verified configuration for eat-smart-83089 with env override support
+export const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCa_5KV27FfIQrpJhiUTs9952YnBCYPvSU",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "eat-smart-83089.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "eat-smart-83089",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "eat-smart-83089.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "975765030990",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:975765030990:web:c598e39ebde06cf9cb5b1f",
+  measurementId: "G-C74HK25JFC"
 };
 
 // Initialize Firebase App
-export const app = initializeApp(activeConfig);
+export const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore (handles standard default database or custom id)
-export const db = activeConfig.firestoreDatabaseId && activeConfig.firestoreDatabaseId !== '(default)'
-  ? getFirestore(app, activeConfig.firestoreDatabaseId)
-  : getFirestore(app);
+// Initialize Firestore (default database)
+export const db = getFirestore(app);
 
 // Initialize Firebase Auth
 export const auth = getAuth(app);

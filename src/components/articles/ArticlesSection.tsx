@@ -36,7 +36,7 @@ export const ArticlesSection: React.FC = () => {
   const [formReadTime, setFormReadTime] = useState('3 دقائق');
   const [formSummary, setFormSummary] = useState('');
   const [formContent, setFormContent] = useState('');
-  const [formImageUrl, setFormImageUrl] = useState('/assets/aistudio/chicken_potato_27fb23c9.jpg');
+  const [formImageUrl, setFormImageUrl] = useState('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80');
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export const ArticlesSection: React.FC = () => {
                   alt={article.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/assets/aistudio/chicken_potato_27fb23c9.jpg';
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80';
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-75" />

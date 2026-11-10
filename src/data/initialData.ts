@@ -196,7 +196,7 @@ export const INITIAL_ARTICLES: Omit<Article, 'id'>[] = [
 - إجراء الفحوصات الدورية ومراجعة طبيبك بانتظام.`,
     readTime: "4 دقائق",
     authorName: "د. أماني رأفت",
-    imageUrl: "/assets/aistudio/chicken_potato_27fb23c9.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80",
     createdAt: new Date().toISOString()
   },
   {
@@ -214,7 +214,7 @@ export const INITIAL_ARTICLES: Omit<Article, 'id'>[] = [
 4. **النوم والتوتر**: قلة النوم ترفع هرمون الجريلين (هرمون الجوع) وتخفض اللبتين (هرمون الشبع). احرص على 7-8 ساعات نوم مريح.`,
     readTime: "3 دقائق",
     authorName: "د. أماني رأفت",
-    imageUrl: "/assets/aistudio/koshari_d46d48f4.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80",
     createdAt: new Date().toISOString()
   },
   {
@@ -231,7 +231,7 @@ export const INITIAL_ARTICLES: Omit<Article, 'id'>[] = [
 - اشرب كوب ماء قبل كل وجبة بـ 20 دقيقة لتحسين الهضم والشعور بالامتلاء.`,
     readTime: "2 دقيقة",
     authorName: "د. أماني رأفت",
-    imageUrl: "/assets/aistudio/watermelon_cheese_fc544d85.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=800&auto=format&fit=crop&q=80",
     createdAt: new Date().toISOString()
   }
 ];

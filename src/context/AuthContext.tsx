@@ -25,6 +25,7 @@ import { INITIAL_RECIPES, INITIAL_ARTICLES, INITIAL_REVIEWS } from '../data/init
 // Bootstrapped Admin Emails
 const ADMIN_EMAILS = [
   'philopateerosama2004@gmail.com',
+  'philopateerosama1926@gmail.com',
   'amanyraafat@gmail.com',
   'admin@eatsmart.com'
 ];
@@ -181,17 +182,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await createUserWithEmailAndPassword(auth, email.trim(), pass);
       if (res.user) {
-        await updateProfile(res.user, { displayName: name });
+        try {
+          await updateProfile(res.user, { displayName: name });
+        } catch (e) {
+          console.warn('Profile name update skipped:', e);
+        }
+
         const emailLower = email.toLowerCase().trim();
         const shouldBeAdmin = ADMIN_EMAILS.includes(emailLower);
-
-        if (shouldBeAdmin) {
-          await setDoc(doc(db, 'admins', res.user.uid), {
-            uid: res.user.uid,
-            email: emailLower,
-            createdAt: new Date().toISOString()
-          });
-        }
 
         const newProfile: UserProfile = {
           id: res.user.uid,
@@ -200,9 +198,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           role: shouldBeAdmin ? 'admin' : 'user',
           createdAt: new Date().toISOString()
         };
-        await setDoc(doc(db, 'users', res.user.uid), newProfile);
+
         setUserProfile(newProfile);
         setIsAdmin(shouldBeAdmin);
+
+        // Safe Firestore write
+        try {
+          if (shouldBeAdmin) {
+            await setDoc(doc(db, 'admins', res.user.uid), {
+              uid: res.user.uid,
+              email: emailLower,
+              createdAt: new Date().toISOString()
+            });
+          }
+          await setDoc(doc(db, 'users', res.user.uid), newProfile);
+        } catch (dbErr) {
+          console.warn('Firestore profile write deferred:', dbErr);
+        }
       }
     } catch (error: any) {
       handleAuthError(error);
@@ -218,35 +230,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const emailLower = (res.user.email || '').toLowerCase().trim();
         const shouldBeAdmin = ADMIN_EMAILS.includes(emailLower);
 
-        if (shouldBeAdmin) {
-          try {
+        const newProfile: UserProfile = {
+          id: res.user.uid,
+          name: res.user.displayName || 'مشترك جديد',
+          email: res.user.email || '',
+          role: shouldBeAdmin ? 'admin' : 'user',
+          photoURL: res.user.photoURL || undefined,
+          createdAt: new Date().toISOString()
+        };
+
+        setUserProfile(newProfile);
+        setIsAdmin(shouldBeAdmin);
+
+        // Safe Firestore sync
+        try {
+          if (shouldBeAdmin) {
             await setDoc(doc(db, 'admins', res.user.uid), {
               uid: res.user.uid,
               email: emailLower,
               createdAt: new Date().toISOString()
             });
-          } catch (e) {
-            console.warn('Admin record write check:', e);
           }
-        }
 
-        const userDocRef = doc(db, 'users', res.user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (!userDoc.exists()) {
-          const newProfile: UserProfile = {
-            id: res.user.uid,
-            name: res.user.displayName || 'مشترك جديد',
-            email: res.user.email || '',
-            role: shouldBeAdmin ? 'admin' : 'user',
-            photoURL: res.user.photoURL || undefined,
-            createdAt: new Date().toISOString()
-          };
-          await setDoc(userDocRef, newProfile);
-          setUserProfile(newProfile);
+          const userDocRef = doc(db, 'users', res.user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (!userDoc.exists()) {
+            await setDoc(userDocRef, newProfile);
+          }
+        } catch (e) {
+          console.warn('Firestore google profile sync deferred:', e);
         }
       }
     } catch (error: any) {
-      if (error.code !== 'auth/popup-closed-by-user') {
+      if (error?.code !== 'auth/popup-closed-by-user') {
         handleAuthError(error);
       }
     }
@@ -266,32 +282,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await setDoc(userDocRef, data, { merge: true });
       setUserProfile((prev) => (prev ? { ...prev, ...data } : null));
     } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `users/${user.uid}`);
+      console.warn('Profile update error:', error);
     }
   };
 
   const handleAuthError = (error: any) => {
-    let msg = error?.message || 'حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.';
+    console.error('Firebase Auth Error:', error);
     const code = error?.code || '';
+    let msg = error?.message || 'حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.';
 
-    if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+    if (code === 'auth/operation-not-allowed') {
+      msg = 'طريقة تسجيل الدخول غير مفعلة في مشروع Firebase! يرجى فتح Firebase Console > Authentication > Sign-in method وتفعيل خيار (Email/Password) وخيار (Google).';
+    } else if (code === 'auth/unauthorized-domain') {
+      msg = 'الدومين الحالي غير مضاف في قائمة النطاقات المصرح بها في Firebase! يرجى إضافته في Firebase Console > Authentication > Settings > Authorized domains.';
+    } else if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
       msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
     } else if (code === 'auth/email-already-in-use') {
-      msg = 'هذا البريد الإلكتروني مسجل بالفعل، يرجى تسجيل الدخول.';
+      msg = 'هذا البريد الإلكتروني مسجل بالفعل! اضغط على تبويب "تسجيل الدخول" في الأعلى للدخول بحسابك.';
     } else if (code === 'auth/weak-password') {
-      msg = 'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف أو أرقام على الأقل.';
+      msg = 'كلمة المرور ضعيفة جداً، يرجى كتابة 6 أحرف أو أرقام على الأقل.';
     } else if (code === 'auth/invalid-email') {
       msg = 'صيغة البريد الإلكتروني غير صحيحة.';
-    } else if (code === 'auth/network-request-failed') {
-      msg = 'تأكد من اتصالك بالإنترنت وحاول ثانية.';
-    } else if (code === 'auth/unauthorized-domain') {
-      msg = `الدومين الحالي غير مضاف في قائمة النطاقات المصرح بها في Firebase. يرجى إضافته في Firebase Console > Authentication > Settings > Authorized domains.`;
-    } else if (code === 'auth/operation-not-allowed') {
-      msg = 'طريقة تسجيل الدخول هذه غير مفعلة في مشروع Firebase. يرجى تفعيلها من Firebase Console > Authentication > Sign-in method.';
     } else if (code === 'auth/popup-blocked') {
-      msg = 'المتصفح حظر نافذة تسجيل الدخول المنبثقة (Popup). يرجى السماح بالنوافذ المنبثقة والمحاولة ثانية.';
+      msg = 'المتصفح حظر نافذة تسجيل الدخول المنبثقة (Popup). يرجى السماح بالنوافذ المنبثقة في شريط عنوان المتصفح.';
+    } else if (code === 'auth/network-request-failed') {
+      msg = 'تعذر الاتصال بخوادم Firebase. تأكد من اتصالك بالإنترنت.';
     } else if (code) {
-      msg = `حدث خطأ: ${code} - يرجى التأكد من إعدادات Firebase Authentication.`;
+      msg = `خطأ Firebase (${code}): ${error?.message || 'تأكد من إعدادات Authentication'}`;
     }
     throw new Error(msg);
   };

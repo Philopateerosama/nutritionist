@@ -26,7 +26,9 @@ export const AuthModal: React.FC = () => {
         await signupWithEmail(email, password, name.trim());
       }
     } catch (err: any) {
-      setError(err.message || 'حدث خطأ، يرجى المحاولة ثانية');
+      console.error('Login/Signup error:', err);
+      const codeStr = err?.code ? ` (${err.code})` : '';
+      setError((err.message || 'حدث خطأ، يرجى المحاولة ثانية') + codeStr);
     } finally {
       setLoading(false);
     }
@@ -38,7 +40,9 @@ export const AuthModal: React.FC = () => {
     try {
       await loginWithGoogle();
     } catch (err: any) {
-      setError(err.message || 'فشل تسجيل الدخول بحساب Google');
+      console.error('Google Sign-in error:', err);
+      const codeStr = err?.code ? ` (${err.code})` : '';
+      setError((err.message || 'فشل تسجيل الدخول بحساب Google') + codeStr);
     } finally {
       setLoading(false);
     }
@@ -240,16 +244,6 @@ export const AuthModal: React.FC = () => {
             <span>تسجيل الدخول بحساب Google</span>
           </button>
 
-          {/* Admin badge tip */}
-          <div className="mt-6 p-3 bg-amber-50/80 border border-amber-200/70 rounded-2xl flex items-start gap-2.5 text-xs text-amber-900 font-medium">
-            <Shield className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
-            <div>
-              <p className="font-bold">حسابات الإدارة والأطباء:</p>
-              <p className="text-amber-800 text-[11px] mt-0.5">
-                حساب الأدمن مرتبط بـ <span className="font-mono font-bold text-amber-950">philopateerosama2004@gmail.com</span> للدخول مباشرة كطبيب وإدارة محتوى الموقع والرد على الشات.
-              </p>
-            </div>
-          </div>
         </div>
 
       </div>

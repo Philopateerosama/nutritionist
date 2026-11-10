@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eat Smart - دكتور أماني رأفت</title>
+    
+    <!-- Google Fonts: Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#15803d', // Dark Green matching the logo (green-700)
+                        secondary: '#86efac', // Light green leaf matching the logo (green-300)
+                        dark: '#0F172A', // Slate 900
+                        light: '#F8FAFC', // Slate 50
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'blob': 'blob 7s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth Scrolling */
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Custom Scrollbar for desktop */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #15803d; border-radius: 10px; }
+        
+        /* Hide scrollbar for mobile horizontal swiping but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Hide number input arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Radio button card styling for Calculator */
+        .radio-card:checked + label {
+            border-color: #15803d;
+            background-color: #f0fdf4;
+            color: #166534;
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px -1px rgba(21, 128, 61, 0.1), 0 2px 4px -1px rgba(21, 128, 61, 0.06);
+        }
+        
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to left, #15803d, #22c55e);
+        }
+    </style>
+</head>
+<body class="bg-light text-dark font-sans antialiased selection:bg-primary selection:text-white overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center z-50">
+                    <a href="#" class="flex items-center gap-2">
+                        <img src="logo.png" alt="Eat Smart Logo" class="h-14 md:h-16 w-auto object-contain" onerror="this.src='https://placehold.co/150x60/15803d/ffffff?text=EAT+SMART'">
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-6 space-x-reverse items-center">
+                    <a href="#home" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">الرئيسية</a>
+                    <a href="#calculator" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">الحاسبة</a>
+                    <a href="#alternatives" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">البدائل</a>
+                    <a href="#glp1" class="text-red-500 hover:text-red-600 transition font-black text-sm uppercase tracking-wide flex items-center gap-1"><i class="fa-solid fa-syringe"></i> حقن التخسيس</a>
+                    <a href="#recipes" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">الوصفات</a>
+                    <a href="#success" class="text-gray-600 hover:text-primary transition font-bold text-sm uppercase tracking-wide">النتائج</a>
+                    <a href="#contact" class="bg-primary text-white px-5 py-2 rounded-full font-bold hover:bg-green-700 shadow-lg shadow-green-200 transition transform hover:-translate-y-1">تواصل معنا</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="lg:hidden flex items-center z-50">
+                    <button id="mobile-menu-btn" class="text-dark hover:text-primary focus:outline-none text-2xl p-2 bg-gray-50/50 backdrop-blur rounded-xl border border-gray-100 shadow-sm active:scale-95 transition-transform">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Fullscreen Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-white/98 backdrop-blur-xl hidden flex-col justify-center items-center opacity-0 transition-opacity duration-300">
+        <div class="flex flex-col space-y-6 text-center w-full px-8">
+            <a href="#home" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">الرئيسية</a>
+            <a href="#calculator" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">حاسبة السعرات</a>
+            <a href="#alternatives" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">دليل البدائل</a>
+            <a href="#glp1" class="mobile-link text-2xl font-black text-red-500 hover:text-red-600 transition py-2 border-b border-gray-100 flex items-center justify-center gap-2"><i class="fa-solid fa-syringe"></i> دليل حقن التخسيس</a>
+            <a href="#recipes" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">الوصفات الذكية</a>
+            <a href="#success" class="mobile-link text-2xl font-black text-slate-800 hover:text-primary transition py-2 border-b border-gray-100">قصص النجاح</a>
+            <a href="#contact" class="mobile-link mt-8 w-full bg-primary text-white px-8 py-4 rounded-2xl font-black text-xl shadow-xl shadow-green-200 active:scale-95 transition-transform">تواصل للاشتراك</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-28 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-white">
+        <!-- Background Blobs (Optimized for performance) -->
+        <div class="absolute top-0 -left-4 w-64 h-64 md:w-72 md:h-72 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div class="absolute top-0 -right-4 w-64 h-64 md:w-72 md:h-72 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" style="animation-delay: 2s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-8">
+                <!-- Text Content -->
+                <div class="w-full lg:w-1/2 text-center lg:text-right fade-in" style="animation-delay: 0.1s;">
+                    <div class="inline-flex items-center gap-2 bg-green-50 border border-green-100 text-primary px-4 py-2 rounded-full text-xs md:text-sm font-bold mb-6">
+                        <span class="relative flex h-2.5 w-2.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+                        </span>
+                        نستقبل الآن حجوزات الشهر الجديد
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight mb-4 md:mb-6 text-slate-800">
+                        حقق حلمك بجسم مثالي وصحة حديد <br class="hidden lg:block">
+                        <span class="text-gradient">مع دكتور أماني رأفت</span>
+                    </h1>
+                    <p class="text-base sm:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
+                        سواء كان هدفك نزول الوزن، بناء العضلات، أو تحسين صحتك. سأقدم لك برامج مخصصة تناسب حياتك وتفضيلاتك في الأكل بدون حرمان أو ملل.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 md:gap-4">
+                        <a href="#contact" class="bg-dark text-white w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 shadow-xl shadow-slate-900/20 active:scale-95 transition-transform flex items-center justify-center gap-3">
+                            تواصل للاشتراك
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                        <a href="#calculator" class="bg-white text-primary border-2 border-primary w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-lg hover:bg-green-50 active:scale-95 transition-transform flex items-center justify-center gap-3 shadow-lg shadow-green-50">
+                            احسب سعراتك مجاناً
+                            <i class="fa-solid fa-calculator"></i>
+                        </a>
+                    </div>
+                    
+                    <!-- Social Proof -->
+                    <div class="mt-10 flex flex-row items-center justify-center lg:justify-start gap-4 text-gray-600">
+                        <div class="flex -space-x-3 space-x-reverse">
+                            <img class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="user">
+                            <img class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="user">
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white bg-green-100 flex items-center justify-center text-xs md:text-sm font-black text-primary shadow-sm">+5K</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="flex text-amber-400 text-xs md:text-sm mb-0.5 justify-start">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-xs md:text-sm font-bold">آلاف العملاء السعداء</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image/Visual -->
+                <div class="w-full lg:w-1/2 relative fade-in mt-6 md:mt-0" style="animation-delay: 0.3s;">
+                    <div class="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 md:border-8 border-white bg-gray-100">
+                        <!-- تم إضافة ID للفيديو وزرار الصوت وإلغاء التكرار والتشغيل التلقائي -->
+                        <video id="hero-vid" src="hero-video.mp4" playsinline class="w-full object-cover h-[300px] sm:h-[400px] lg:h-[600px]"></video>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+                        
+                        <!-- زرار كتم/تشغيل الصوت -->
+                        <button id="mute-btn" class="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white w-10 h-10 flex items-center justify-center rounded-full z-30 backdrop-blur transition-all border border-white/20">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Floating Cards - Mobile Optimized -->
+                    <div class="absolute bottom-6 -right-2 md:bottom-10 md:-right-8 bg-white/95 backdrop-blur p-3 md:p-4 rounded-2xl shadow-xl z-20 flex items-center gap-3 animate-float border border-gray-100 scale-90 md:scale-100 origin-bottom-right">
+                        <div class="bg-red-50 text-red-500 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-xl shrink-0">
+                            <i class="fa-solid fa-fire-flame-curved"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] md:text-xs text-gray-500 font-bold mb-0.5">معدل حرق عالي</p>
+                            <p class="text-sm md:text-lg font-black text-slate-800">-5 كجم شهرياً</p>
+                        </div>
+                    </div>
+
+                    <div class="hidden sm:flex absolute top-10 -left-8 bg-white/95 backdrop-blur p-4 rounded-2xl shadow-xl z-20 items-center gap-4 animate-float border border-gray-100" style="animation-delay: 1.5s;">
+                        <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-full flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-dumbbell"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 font-bold mb-1">بناء عضل صافي</p>
+                            <p class="text-lg font-black text-slate-800">برامج تدريبية</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Calculator -->
+    <section id="calculator" class="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
+        <!-- Background Decorative Elements -->
+        <div class="absolute top-20 -left-20 w-72 h-72 bg-primary/5 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-20 -right-20 w-72 h-72 bg-amber-400/5 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-10 md:mb-14 fade-in">
+                <span class="text-primary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">أدوات مجانية</span>
+                <h2 class="text-3xl md:text-5xl font-black text-dark mb-4">احسب سعراتك بدقة 🎯</h2>
+                <p class="text-gray-500 text-sm md:text-base max-w-2xl mx-auto">أدخل بياناتك لمعرفة مؤشر كتلة جسمك (BMI) واحتياجك اليومي من السعرات والماكروز بخوارزميات دقيقة.</p>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-10 border border-gray-100 fade-in">
+                <form id="macro-form" class="space-y-8 md:space-y-10">
+                    <!-- Gender & Goal -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Gender -->
+                        <div>
+                            <label class="block text-sm font-black text-gray-800 mb-3">النوع</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="relative">
+                                    <input type="radio" name="gender" value="male" id="male" class="radio-card peer sr-only" required>
+                                    <label for="male" class="flex flex-col items-center justify-center p-4 border-2 border-gray-100 bg-gray-50 rounded-2xl cursor-pointer transition-all hover:bg-gray-100 text-gray-500">
+                                        <i class="fa-solid fa-mars text-3xl mb-2"></i>
+                                        <span class="font-black text-sm">ذكر</span>
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="radio" name="gender" value="female" id="female" class="radio-card peer sr-only">
+                                    <label for="female" class="flex flex-col items-center justify-center p-4 border-2 border-gray-100 bg-gray-50 rounded-2xl cursor-pointer transition-all hover:bg-gray-100 text-gray-500">
+                                        <i class="fa-solid fa-venus text-3xl mb-2"></i>
+                                        <span class="font-black text-sm">أنثى</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Goal -->
+                        <div>
+                            <label class="block text-sm font-black text-gray-800 mb-3">هدفك الأساسي</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="relative">
+                                    <input type="radio" name="goal" value="lose" id="lose" class="radio-card peer sr-only" required>
+                                    <label for="lose" class="flex flex-col items-center justify-center p-3 border-2 border-gray-100 bg-gray-50 rounded-2xl cursor-pointer transition-all hover:bg-gray-100 text-gray-500 h-full">
+                                        <i class="fa-solid fa-arrow-trend-down text-2xl mb-2"></i>
+                                        <span class="font-black text-xs md:text-sm text-center">تخسيس</span>
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="radio" name="goal" value="maintain" id="maintain" class="radio-card peer sr-only">
+                                    <label for="maintain" class="flex flex-col items-center justify-center p-3 border-2 border-gray-100 bg-gray-50 rounded-2xl cursor-pointer transition-all hover:bg-gray-100 text-gray-500 h-full">
+                                        <i class="fa-solid fa-scale-balanced text-2xl mb-2"></i>
+                                        <span class="font-black text-xs md:text-sm text-center">ثبات</span>
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input type="radio" name="goal" value="gain" id="gain" class="radio-card peer sr-only">
+                                    <label for="gain" class="flex flex-col items-center justify-center p-3 border-2 border-gray-100 bg-gray-50 rounded-2xl cursor-pointer transition-all hover:bg-gray-100 text-gray-500 h-full">
+                                        <i class="fa-solid fa-arrow-trend-up text-2xl mb-2"></i>
+                                        <span class="font-black text-xs md:text-sm text-center">عضل</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+                        <div>
+                            <label class="block text-sm font-black text-gray-800 mb-3">العمر</label>
+                            <div class="relative group">
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors pointer-events-none text-lg">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </div>
+                                <input type="number" id="age" inputmode="numeric" pattern="[0-9]*" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pr-12 pl-14 py-4 focus:outline-none focus:ring-0 focus:border-primary transition-all font-black text-dark text-lg" placeholder="مثال: 25" required>
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-bold bg-gray-200/80 px-2.5 py-1.5 rounded-lg pointer-events-none">سنة</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-black text-gray-800 mb-3">الوزن</label>
+                            <div class="relative group">
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors pointer-events-none text-lg">
+                                    <i class="fa-solid fa-weight-scale"></i>
+                                </div>
+                                <input type="number" id="weight" inputmode="numeric" pattern="[0-9]*" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pr-12 pl-14 py-4 focus:outline-none focus:ring-0 focus:border-primary transition-all font-black text-dark text-lg" placeholder="مثال: 75" required>
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-bold bg-gray-200/80 px-2.5 py-1.5 rounded-lg pointer-events-none">كجم</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-black text-gray-800 mb-3">الطول</label>
+                            <div class="relative group">
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors pointer-events-none text-lg">
+                                    <i class="fa-solid fa-ruler-vertical"></i>
+                                </div>
+                                <input type="number" id="height" inputmode="numeric" pattern="[0-9]*" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pr-12 pl-14 py-4 focus:outline-none focus:ring-0 focus:border-primary transition-all font-black text-dark text-lg" placeholder="مثال: 170" required>
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-bold bg-gray-200/80 px-2.5 py-1.5 rounded-lg pointer-events-none">سم</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Level -->
+                    <div>
+                        <label class="block text-sm font-black text-gray-800 mb-3">معدل النشاط الحركي في الأسبوع</label>
+                        <div class="relative group">
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors pointer-events-none text-lg">
+                                <i class="fa-solid fa-person-running"></i>
+                            </div>
+                            <select id="activity" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl pr-12 pl-10 py-4 focus:outline-none focus:ring-0 focus:border-primary transition-all font-bold text-dark text-sm md:text-base appearance-none cursor-pointer">
+                                <option value="1.2">قليل الحركة (عمل مكتبي بدون رياضة)</option>
+                                <option value="1.375">نشاط خفيف (رياضة 1-3 أيام بالأسبوع)</option>
+                                <option value="1.55" selected>نشاط متوسط (رياضة 3-5 أيام بالأسبوع)</option>
+                                <option value="1.725">نشيط جداً (رياضة 6-7 أيام بالأسبوع)</option>
+                                <option value="1.9">رياضي محترف (تمرين شاق يومياً)</option>
+                            </select>
+                            <div class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-dark text-white py-4 md:py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-slate-800 active:scale-95 transition-transform flex items-center justify-center gap-3 shadow-xl shadow-slate-900/20 group">
+                        احسب النتيجة الآن <i class="fa-solid fa-wand-magic-sparkles group-hover:rotate-12 transition-transform"></i>
+                    </button>
+                </form>
+
+                <!-- Results Output -->
+                <div id="results" class="mt-10 pt-10 border-t-2 border-gray-100 hidden">
+                    <h3 class="text-center font-black text-2xl text-dark mb-8">نتيجتك المخصصة</h3>
+                    
+                    <!-- BMI Card -->
+                    <div class="bg-white border-2 border-gray-100 rounded-3xl p-5 md:p-6 mb-6 shadow-md relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-4 w-full sm:w-auto justify-center sm:justify-start">
+                            <div id="bmi-icon-bg" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 transition-colors">
+                                <i class="fa-solid fa-weight-scale"></i>
+                            </div>
+                            <div class="text-center sm:text-right">
+                                <p class="text-xs md:text-sm font-bold text-gray-500 mb-1">مؤشر كتلة الجسم (BMI)</p>
+                                <div class="flex items-baseline justify-center sm:justify-start gap-1">
+                                    <span id="res-bmi" class="text-3xl md:text-4xl font-black text-dark">0.0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center w-full sm:w-auto">
+                            <span id="res-bmi-category" class="inline-block w-full sm:w-auto px-6 py-3 rounded-xl text-sm md:text-base font-black transition-colors border-2">
+                                جاري الحساب...
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Main Calories -->
+                    <div class="bg-gradient-to-r from-primary to-green-500 rounded-3xl p-8 text-white text-center mb-6 shadow-xl shadow-green-200/50 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-30"></div>
+                        <div class="relative z-10">
+                            <p class="text-sm md:text-base font-bold mb-2 opacity-90">السعرات الحرارية المقترحة للوصول لهدفك</p>
+                            <div class="flex items-baseline justify-center gap-2">
+                                <span id="res-calories" class="text-6xl md:text-7xl font-black tracking-tighter">0</span>
+                                <span class="text-lg md:text-xl font-bold opacity-80">سعر/يوم</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Macros -->
+                    <div class="grid grid-cols-3 gap-3 md:gap-5">
+                        <div class="bg-blue-50 border-2 border-blue-100 rounded-2xl p-4 text-center shadow-sm">
+                            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-drumstick-bite text-lg"></i>
+                            </div>
+                            <p class="text-xs md:text-sm text-gray-500 font-bold mb-1">بروتين</p>
+                            <p class="text-xl md:text-2xl font-black text-blue-700"><span id="res-protein">0</span>g</p>
+                        </div>
+                        <div class="bg-amber-50 border-2 border-amber-100 rounded-2xl p-4 text-center shadow-sm">
+                            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-wheat-awn text-lg"></i>
+                            </div>
+                            <p class="text-xs md:text-sm text-gray-500 font-bold mb-1">كارب</p>
+                            <p class="text-xl md:text-2xl font-black text-amber-700"><span id="res-carbs">0</span>g</p>
+                        </div>
+                        <div class="bg-rose-50 border-2 border-rose-100 rounded-2xl p-4 text-center shadow-sm">
+                            <div class="w-10 h-10 md:w-12 md:h-12 mx-auto bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-droplet text-lg"></i>
+                            </div>
+                            <p class="text-xs md:text-sm text-gray-500 font-bold mb-1">دهون صحية</p>
+                            <p class="text-xl md:text-2xl font-black text-rose-700"><span id="res-fats">0</span>g</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-center bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <p class="text-xs md:text-sm text-gray-600 font-bold leading-relaxed">
+                            <i class="fa-solid fa-lightbulb text-amber-500 ml-1"></i>
+                            هذه الأرقام تقريبية، للحصول على نتيجة دقيقة 100% ونظام مخصص لاحتياجك وحالتك الصحية.. <a href="#contact" class="text-primary underline hover:text-green-700 transition">تواصل معنا الآن للمتابعة</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Alternatives Section -->
+    <section id="alternatives" class="py-16 md:py-24 bg-white relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-10 md:mb-14 fade-in">
+                <span class="text-primary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">الدايت مش حرمان</span>
+                <h2 class="text-2xl md:text-5xl font-black text-dark mb-4">دليل البدائل الذكية 🔄</h2>
+                <p class="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto">نفسك في حاجة ومش عندك؟ اختار بديلها من القائمة دي بنفس السعرات والفوائد.</p>
+            </div>
+
+            <!-- Accordion Container -->
+            <div class="space-y-4 fade-in" style="animation-delay: 0.2s;">
+                
+                <!-- 1. Dairy -->
+                <div class="border border-gray-100 rounded-2xl overflow-hidden bg-gray-50/50">
+                    <button class="accordion-btn w-full px-5 py-4 md:p-6 flex items-center justify-between bg-white hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg"><i class="fa-solid fa-glass-water"></i></div>
+                            <h3 class="font-bold text-dark text-base md:text-lg">بدائل الحليب</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content hidden px-5 py-4 md:p-6 border-t border-gray-100">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-4 py-2 rounded-xl text-sm font-bold text-gray-700">1 كوب لبن (240 مللي)</span>
+                            <i class="fa-solid fa-equals text-primary text-xs mx-1"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-xl text-sm font-bold text-primary">كوب زبادي صغير (180 مللي)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Carbs -->
+                <div class="border border-gray-100 rounded-2xl overflow-hidden bg-gray-50/50">
+                    <button class="accordion-btn w-full px-5 py-4 md:p-6 flex items-center justify-between bg-white hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-bread-slice"></i></div>
+                            <h3 class="font-bold text-dark text-base md:text-lg">بدائل النشويات</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content hidden px-5 py-4 md:p-6 border-t border-gray-100 space-y-4">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">ربع رغيف بلدي</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">1 توست بني</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">نصف كوب (كورن فليكس/شوفان/ذرة/فريك/برغل/بليلة)</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">3 كوب فشار جاهز (بمعلقة زيت)</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">نص كوز ذرة مشوي</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">نصف كوب بقوليات (فول/عدس/فاصوليا)</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">ثلث كوب أرز أو مكرونة (5-6 معالق)</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">حبة بطاطس متوسطة (مسلوقة/مشوية)</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">1 بسكوت دايجستيف</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">بولة آيس كريم بدون بسكوت أو شيكولاتة</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Protein -->
+                <div class="border border-gray-100 rounded-2xl overflow-hidden bg-gray-50/50">
+                    <button class="accordion-btn w-full px-5 py-4 md:p-6 flex items-center justify-between bg-white hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg"><i class="fa-solid fa-drumstick-bite"></i></div>
+                            <h3 class="font-bold text-dark text-base md:text-lg">بدائل البروتين</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content hidden px-5 py-4 md:p-6 border-t border-gray-100 space-y-4">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">بيضة مسلوقة</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">ربع كوب جبنة قريش</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">2 معلقة طعام جبنة بيضاء أو 1 مثلث دايت</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">حجم أصبعين من (لحم/فراخ/سمك)</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">5 حبات جمبري</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">علبة تونة مصفاة أو نصف كوب مشروم</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Fruits & Veg -->
+                <div class="border border-gray-100 rounded-2xl overflow-hidden bg-gray-50/50">
+                    <button class="accordion-btn w-full px-5 py-4 md:p-6 flex items-center justify-between bg-white hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-lg"><i class="fa-solid fa-apple-whole"></i></div>
+                            <h3 class="font-bold text-dark text-base md:text-lg">بدائل الفواكه والخضروات</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content hidden px-5 py-4 md:p-6 border-t border-gray-100 space-y-4">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">1 ثمرة (تفاح/كمثرى/برتقال)</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">نصف (موز/مانجا)</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">3 لـ 5 حبات تمر</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">نصف كوب عصير دون سكر (تفاح/برتقال)</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">ثلث كوب (عنب/توت بري)</span>
+                        </div>
+                        <div class="mt-4 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                            <h4 class="font-bold text-sm text-emerald-800 mb-2"><i class="fa-solid fa-leaf"></i> الخضروات المفتوحة (بأي كمية):</h4>
+                            <p class="text-sm text-gray-600 font-medium">الخس، البقدونس، الكرفس، الخيار، الفجل.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Fats & Drinks -->
+                <div class="border border-gray-100 rounded-2xl overflow-hidden bg-gray-50/50">
+                    <button class="accordion-btn w-full px-5 py-4 md:p-6 flex items-center justify-between bg-white hover:bg-gray-50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg"><i class="fa-solid fa-mug-hot"></i></div>
+                            <h3 class="font-bold text-dark text-base md:text-lg">الدهون، المشروبات، والممنوعات</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content hidden px-5 py-4 md:p-6 border-t border-gray-100 space-y-4">
+                        <h4 class="font-bold text-sm text-gray-700 mb-1">بدائل الدهون الصحية:</h4>
+                        <div class="flex flex-wrap items-center gap-2 mb-4">
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">معلقة صغيرة زيت/سمن</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-bold text-gray-700">6 حبات مكسرات نية</span>
+                            <i class="fa-solid fa-equals text-primary text-xs"></i>
+                            <span class="bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold text-primary">8 حبات زيتون أو معلقتين طحينة صغيرة</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                            <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                                <h4 class="font-bold text-sm text-green-700 mb-2"><i class="fa-solid fa-check-circle"></i> المشروبات المسموحة</h4>
+                                <p class="text-xs font-bold text-gray-600 leading-relaxed">مياه - قهوة - شاي أخضر - ليمون - أعشاب.</p>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                                <h4 class="font-bold text-sm text-red-700 mb-2"><i class="fa-solid fa-ban"></i> الممنوعات</h4>
+                                <p class="text-xs font-bold text-gray-600 leading-relaxed">السكر (معلقة واحدة يومياً) - المخبوزات - المقليات - الكريمر - الملح الزايد - الدقيق الأبيض.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- GLP-1 Injections Medical Section -->
+    <section id="glp1" class="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 20px 20px;"></div>
+        
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-10 md:mb-14 fade-in">
+                <span class="text-red-500 font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">دليل طبي شامل</span>
+                <h2 class="text-3xl md:text-5xl font-black text-dark mb-4">حقن التخسيس (GLP-1) 💉</h2>
+                <p class="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto">كل ما تحتاج معرفته عن إبر إنقاص الوزن، أنواعها، والأعراض الجانبية والتحاليل المطلوبة قبل البدء.</p>
+            </div>
+
+            <!-- Warning Alert -->
+            <div class="bg-red-50 border-r-4 border-red-500 p-5 md:p-6 rounded-2xl mb-10 shadow-sm flex items-start gap-4 fade-in" style="animation-delay: 0.1s;">
+                <div class="text-red-500 text-2xl md:text-3xl shrink-0 mt-1">
+                    <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
+                </div>
+                <div>
+                    <h3 class="font-black text-red-800 text-base md:text-lg mb-1">تحذير طبي هام جداً</h3>
+                    <p class="text-red-700 text-sm md:text-base font-medium leading-relaxed">
+                        يُمنع تماماً البدء في استخدام هذه الحقن بدون استشارة طبيب متخصص، ولا غنى عن <span class="font-bold underline">المتابعة مع أخصائي تغذية</span>. الاستخدام العشوائي بدون نظام غذائي مخصص سيؤدي إلى فقدان حاد في الكتلة العضلية، وضعف عام، وعودة الوزن أضعافاً بعد إيقافها.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Medication Types -->
+            <h3 class="font-black text-xl text-dark mb-6 text-center md:text-right">أشهر الأنواع المتوفرة بالسوق</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mb-12 fade-in" style="animation-delay: 0.2s;">
+                <!-- Ozempic -->
+                <div class="bg-white p-6 rounded-3xl border-2 border-blue-100 hover:border-blue-300 shadow-lg transition-all relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+                    <div class="w-14 h-14 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-prescription-bottle-medical"></i>
+                    </div>
+                    <h4 class="font-black text-xl text-dark mb-1">أوزمبيك <span class="text-sm font-normal text-gray-400 block">Ozempic</span></h4>
+                    <p class="text-xs font-bold text-blue-600 mb-3 bg-blue-50 inline-block px-3 py-1 rounded-full">Semaglutide</p>
+                    <p class="text-sm text-gray-500 font-medium">الأشهر والأكثر استخداماً لعلاج السكر وتخفيف الوزن، يتم أخذها مرة واحدة أسبوعياً وتأتي بجرعات متدرجة.</p>
+                </div>
+
+                <!-- Wegovy -->
+                <div class="bg-white p-6 rounded-3xl border-2 border-teal-100 hover:border-teal-300 shadow-lg transition-all relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-teal-500"></div>
+                    <div class="w-14 h-14 rounded-full bg-teal-50 text-teal-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-syringe"></i>
+                    </div>
+                    <h4 class="font-black text-xl text-dark mb-1">ويجوفي <span class="text-sm font-normal text-gray-400 block">Wegovy</span></h4>
+                    <p class="text-xs font-bold text-teal-600 mb-3 bg-teal-50 inline-block px-3 py-1 rounded-full">Semaglutide</p>
+                    <p class="text-sm text-gray-500 font-medium">تحتوي على نفس المادة الفعالة لأوزمبيك لكن بجرعات أعلى، ومصرحة خصيصاً عالمياً لعلاج السمنة.</p>
+                </div>
+
+                <!-- Mounjaro -->
+                <div class="bg-white p-6 rounded-3xl border-2 border-purple-100 hover:border-purple-300 shadow-lg transition-all relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
+                    <div class="w-14 h-14 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-vial"></i>
+                    </div>
+                    <h4 class="font-black text-xl text-dark mb-1">مونجارو <span class="text-sm font-normal text-gray-400 block">Mounjaro</span></h4>
+                    <p class="text-xs font-bold text-purple-600 mb-3 bg-purple-50 inline-block px-3 py-1 rounded-full">Tirzepatide</p>
+                    <p class="text-sm text-gray-500 font-medium">الجيل الأحدث والأقوى، تعمل على هرمونين (GLP-1 و GIP) ونتائجها أسرع وأقوى في نزول الوزن.</p>
+                </div>
+            </div>
+
+            <!-- Two Columns: Side Effects & Lab Tests -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 fade-in" style="animation-delay: 0.3s;">
+                
+                <!-- Pros and Cons -->
+                <div class="bg-white p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-xl">
+                    <div class="mb-8">
+                        <h3 class="font-black text-lg text-dark mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-green-500"></i> مميزات هذه الحقن
+                        </h3>
+                        <ul class="space-y-2 text-sm md:text-base font-medium text-gray-600">
+                            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></div> كبح قوي جداً للشهية وتقليل الرغبة في الأكل.</li>
+                            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></div> إبطاء تفريغ المعدة والشعور بالشبع لفترة طويلة.</li>
+                            <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></div> نزول سريع وملحوظ في الوزن إذا التزمت بالدايت.</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-100">
+                        <h3 class="font-black text-lg text-dark mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-xmark text-rose-500"></i> الأعراض الجانبية المتوقعة
+                        </h3>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold">غثيان وقيء</span>
+                            <span class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold">إمساك أو إسهال</span>
+                            <span class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold">ارتجاع مريء</span>
+                            <span class="bg-rose-50 text-rose-700 px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold">صداع ودوخة</span>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+                            <p class="text-xs md:text-sm font-bold text-amber-800 leading-relaxed">
+                                <i class="fa-solid fa-dumbbell mr-1"></i> العرض الأخطر: <span class="text-red-600">فقدان الكتلة العضلية (Sarcopenia).</span> لذلك دورنا كأخصائيين تغذية هو تصميم نظام عالي البروتين لتجنب ترهل الجسم وضعف الحرق.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab Tests Checklist -->
+                <div class="bg-dark text-white p-6 md:p-8 rounded-[2rem] shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary rounded-full mix-blend-overlay filter blur-2xl opacity-40"></div>
+                    
+                    <h3 class="font-black text-xl mb-2 flex items-center gap-3">
+                        <i class="fa-solid fa-microscope text-primary"></i> التحاليل الطبية المطلوبة
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-6">يجب إجراء هذه التحاليل للتأكد من كفاءة الغدة والبنكرياس قبل اتخاذ قرار الحقن:</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 text-sm md:text-base font-bold">
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span dir="ltr">HBA1C</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span dir="ltr">TSH, FT3, FT4</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>Serum Ferritin</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>Serum amylase</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>Serum lipase</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>Uric acid</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>CBC</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>Creatinine</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>VitD3</span>
+                        </div>
+                        <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                            <i class="fa-solid fa-vial-circle-check text-green-400"></i> <span>Lipid profile</span>
+                        </div>
+                    </div>
+
+                    <a href="https://wa.me/201287506835?text=مرحباً%20دكتور%20أماني،%20أريد%20إرسال%20التحاليل%20الخاصة%20بي%20لمراجعتها%20قبل%20البدء%20في%20كورس%20حقن%20التخسيس." target="_blank" class="mt-8 w-full bg-white text-dark py-4 rounded-xl font-black text-base hover:bg-gray-100 active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-green-500 text-xl"></i> إرسال التحاليل للمراجعة
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Recipes Section -->
+    <section id="recipes" class="py-16 md:py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 md:mb-12 fade-in">
+                <span class="text-primary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">بدون حرمان</span>
+                <h2 class="text-3xl md:text-5xl font-black text-dark mb-4">وصفات ذكية ولذيذة 🍕</h2>
+                <p class="text-gray-500 text-sm md:text-base">استمتع بأكلك المفضل بطريقة صحية، محسوبة السعرات والماكروز.</p>
+            </div>
+
+            <!-- Filters (Swipeable on mobile) -->
+            <div class="flex overflow-x-auto hide-scrollbar gap-3 md:gap-4 justify-start md:justify-center mb-10 pb-4 px-4 md:px-0 fade-in snap-x">
+                <button class="filter-btn active shrink-0 bg-dark text-white px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold shadow-md transition snap-center" data-filter="all">الكل</button>
+                <button class="filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition snap-center" data-filter="breakfast">إفطار</button>
+                <button class="filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition snap-center" data-filter="lunch">غداء</button>
+                <button class="filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition snap-center" data-filter="dinner">عشاء</button>
+                <button class="filter-btn shrink-0 bg-red-50 text-red-600 border border-red-100 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-red-100 transition flex items-center gap-2 snap-center" data-filter="under400">
+                    <i class="fa-solid fa-fire text-red-500"></i> تحت 400 سعر
+                </button>
+            </div>
+
+            <!-- Recipes Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" id="recipe-container">
+                <!-- Recipes generated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories Carousel (Real Chat Screenshots) -->
+    <section id="success" class="py-16 md:py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary rounded-full mix-blend-overlay filter blur-[100px] opacity-20"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-10 md:mb-14 fade-in">
+                <span class="text-secondary font-bold tracking-wider uppercase text-xs md:text-sm mb-2 block">قصص تلهمك</span>
+                <h2 class="text-3xl md:text-5xl font-black mb-4">أبطال دكتور أماني 🏆</h2>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto mb-4">آراء حقيقية ونتائج مبهرة من عملائنا عبر رسائل الواتساب</p>
+                <div class="flex items-center justify-center gap-2 text-green-400 text-xs md:text-sm font-bold animate-pulse">
+                    <i class="fa-solid fa-arrows-left-right"></i> اسحب يميناً ويساراً للمشاهدة
+                </div>
+            </div>
+
+            <!-- Image Gallery for Real Chat Screenshots -->
+            <div id="reviews-gallery" class="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 pb-6 snap-x snap-mandatory items-center px-4 md:px-0">
+                <!-- الصور سيتم تحميلها هنا تلقائياً بواسطة الجافاسكريبت -->
+                <div id="reviews-loading" class="w-full text-center text-gray-500 py-10 font-bold animate-pulse">جاري تحميل آراء العملاء...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Subscription Section -->
+    <section id="contact" class="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
+        <!-- Background Decorative Elements -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 transform translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform -translate-x-1/2 translate-y-1/2"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-14 border border-gray-100 fade-in relative overflow-hidden">
+                <!-- Inner glow -->
+                <div class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent pointer-events-none"></div>
+                
+                <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative z-10">
+                    
+                    <!-- Text Content -->
+                    <div class="w-full lg:w-1/2 text-center lg:text-right">
+                        <span class="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-xs md:text-sm font-bold mb-6">
+                            <span class="relative flex h-2.5 w-2.5">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                            </span>
+                            متاح الآن حجوزات جديدة
+                        </span>
+                        
+                        <h2 class="text-3xl md:text-5xl font-black text-dark mb-6 leading-tight">جاهز تبدأ <br class="hidden md:block"/> <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">رحلة التغيير؟</span> 🚀</h2>
+                        
+                        <p class="text-gray-500 text-base md:text-lg mb-8 leading-relaxed">
+                            سواء كان هدفك خسارة الوزن، بناء العضلات، أو تحسين صحتك العامة.. تواصل معنا الآن لمعرفة تفاصيل الباقات المتاحة واختيار النظام الأنسب لحياتك.
+                        </p>
+                        
+                        <ul class="space-y-4 mb-8 text-right inline-block">
+                            <li class="flex items-center gap-3 text-dark font-bold text-sm md:text-base">
+                                <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-primary shrink-0"><i class="fa-solid fa-check"></i></div>
+                                أنظمة غذائية وتدريبية مخصصة بالكامل
+                            </li>
+                            <li class="flex items-center gap-3 text-dark font-bold text-sm md:text-base">
+                                <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-primary shrink-0"><i class="fa-solid fa-check"></i></div>
+                                متابعة دورية وتقييم مستمر للنتائج
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons / CTA -->
+                    <div class="w-full lg:w-1/2 flex flex-col items-center">
+                        <div class="bg-gray-50 p-6 md:p-8 rounded-[2rem] w-full max-w-md border border-gray-100 text-center">
+                            <h3 class="font-black text-xl text-dark mb-2">تواصل معنا مباشرة</h3>
+                            <p class="text-gray-500 text-xs md:text-sm mb-6">أسرع طريقة للرد والاستفسار عن طريق الواتساب</p>
+                            
+                            <!-- Main WhatsApp Button -->
+                            <a href="https://wa.me/201287506835?text=مرحباً%20دكتور%20أماني،%20أريد%20الاستفسار%20عن%20تفاصيل%20الاشتراك%20والمتابعة." target="_blank" class="w-full bg-[#25D366] text-white py-4 px-6 rounded-2xl font-black text-lg hover:bg-[#1ebd5a] active:scale-95 transition-all duration-300 flex justify-center items-center gap-3 shadow-xl shadow-[#25D366]/30 mb-6 group">
+                                <i class="fa-brands fa-whatsapp text-2xl group-hover:scale-110 transition-transform animate-pulse-slow"></i>
+                                رسالة على الواتساب
+                            </a>
+                            
+                            <div class="relative flex py-4 items-center mb-6">
+                                <div class="flex-grow border-t border-gray-200"></div>
+                                <span class="flex-shrink-0 mx-4 text-gray-400 text-xs font-bold uppercase">أو عبر السوشيال ميديا</span>
+                                <div class="flex-grow border-t border-gray-200"></div>
+                            </div>
+
+                            <!-- Social Buttons -->
+                            <div class="grid grid-cols-3 gap-3">
+                                <a href="https://www.instagram.com/dramanyraafat_nutritionist?igsh=MTIwem0zcXg0NXRpMA%3D%3D&utm_source=qr" target="_blank" class="flex flex-col items-center justify-center gap-2 p-3 bg-white rounded-xl border border-gray-100 hover:border-pink-200 hover:shadow-md active:scale-95 transition group">
+                                    <div class="text-transparent bg-clip-text bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-2xl group-hover:scale-110 transition-transform"><i class="fa-brands fa-instagram"></i></div>
+                                    <span class="text-[10px] md:text-xs font-bold text-gray-500">إنستجرام</span>
+                                </a>
+                                <a href="https://www.facebook.com/share/1C8KGQFCa7/?mibextid=wwXIfr" target="_blank" class="flex flex-col items-center justify-center gap-2 p-3 bg-white rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md active:scale-95 transition group">
+                                    <div class="text-blue-600 text-2xl group-hover:scale-110 transition-transform"><i class="fa-brands fa-facebook-f"></i></div>
+                                    <span class="text-[10px] md:text-xs font-bold text-gray-500">فيسبوك</span>
+                                </a>
+                                <a href="https://www.tiktok.com/@amanyraafat5?_r=1&_t=ZS-98Byh8SuJ08" target="_blank" class="flex flex-col items-center justify-center gap-2 p-3 bg-white rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-md active:scale-95 transition group">
+                                    <div class="text-black text-2xl group-hover:scale-110 transition-transform"><i class="fa-brands fa-tiktok"></i></div>
+                                    <span class="text-[10px] md:text-xs font-bold text-gray-500">تيك توك</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 py-10 mt-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8 border-b border-gray-100 pb-8 text-center md:text-right">
+                <div class="flex justify-center md:justify-start items-center">
+                    <img src="logo.png" alt="Eat Smart Logo" class="h-12 w-auto object-contain" onerror="this.src='https://placehold.co/150x50/15803d/ffffff?text=EAT+SMART'">
+                </div>
+                
+                <div class="flex gap-4 justify-center">
+                    <a href="https://www.facebook.com/share/1C8KGQFCa7/?mibextid=wwXIfr" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-blue-600 active:text-white md:hover:bg-blue-600 md:hover:text-white transition-all duration-300"><i class="fa-brands fa-facebook-f text-lg"></i></a>
+                    <a href="https://www.instagram.com/dramanyraafat_nutritionist?igsh=MTIwem0zcXg0NXRpMA%3D%3D&utm_source=qr" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-pink-600 active:text-white md:hover:bg-gradient-to-tr md:hover:from-yellow-400 md:hover:via-red-500 md:hover:to-purple-500 md:hover:text-white transition-all duration-300"><i class="fa-brands fa-instagram text-lg"></i></a>
+                    <a href="https://www.tiktok.com/@amanyraafat5?_r=1&_t=ZS-98Byh8SuJ08" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-black active:text-white md:hover:bg-black md:hover:text-white transition-all duration-300"><i class="fa-brands fa-tiktok text-lg"></i></a>
+                    <a href="https://wa.me/201287506835" target="_blank" class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 active:bg-green-500 active:text-white md:hover:bg-green-500 md:hover:text-white transition-all duration-300"><i class="fa-brands fa-whatsapp text-lg"></i></a>
+                </div>
+            </div>
+            
+            <div class="text-center text-gray-500 text-xs md:text-sm font-medium">
+                <p>© <span id="year"></span> موقع Eat Smart - دكتور أماني رأفت. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 bg-dark text-white px-5 py-3 md:px-6 md:py-4 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-[110] flex items-center gap-3 w-[90%] md:w-auto max-w-sm">
+        <div class="w-8 h-8 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span id="toast-msg" class="font-bold text-xs md:text-sm"></span>
+    </div>
+
+    <!-- Recipe Details Modal -->
+    <div id="recipe-modal" class="fixed inset-0 z-[120] hidden flex items-end sm:items-center justify-center sm:p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeRecipeModal()"></div>
+        <div class="bg-white w-full sm:max-w-lg rounded-t-[2rem] sm:rounded-3xl shadow-2xl z-10 overflow-hidden transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300 flex flex-col max-h-[90vh]" id="recipe-modal-content">
+            <div class="relative h-48 sm:h-64 shrink-0">
+                <img id="modal-img" src="" alt="Recipe" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+                <button onclick="closeRecipeModal()" class="absolute top-4 right-4 bg-white/20 hover:bg-white/40 backdrop-blur text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 md:p-8 overflow-y-auto hide-scrollbar bg-white">
+                <h3 id="modal-title" class="text-xl md:text-2xl font-black text-dark mb-5 leading-tight"></h3>
+                
+                <!-- Macros Row in Modal -->
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100 mb-6">
+                    <div class="text-center w-1/3">
+                        <span class="block text-[10px] text-gray-500 font-bold mb-0.5">بروتين</span>
+                        <span id="modal-pro" class="font-black text-sm md:text-base text-blue-600"></span>
+                    </div>
+                    <div class="w-px h-6 bg-gray-200"></div>
+                    <div class="text-center w-1/3">
+                        <span class="block text-[10px] text-gray-500 font-bold mb-0.5">كارب</span>
+                        <span id="modal-carb" class="font-black text-sm md:text-base text-amber-600"></span>
+                    </div>
+                    <div class="w-px h-6 bg-gray-200"></div>
+                    <div class="text-center w-1/3">
+                        <span class="block text-[10px] text-gray-500 font-bold mb-0.5">دهون</span>
+                        <span id="modal-fat" class="font-black text-sm md:text-base text-rose-500"></span>
+                    </div>
+                </div>
+
+                <!-- Ingredients List -->
+                <h4 class="font-black text-lg text-primary mb-4 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-sm"><i class="fa-solid fa-scale-balanced"></i></div>
+                    المقادير (بالميزان)
+                </h4>
+                <ul id="modal-ingredients" class="space-y-3 mb-6">
+                    <!-- Populated by JS -->
+                </ul>
+                
+                <button onclick="closeRecipeModal()" class="w-full bg-gray-100 text-dark py-4 rounded-xl font-bold text-sm hover:bg-gray-200 transition">إغلاق وتصفح المزيد</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // --- Mobile Menu Overlay Logic ---
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let menuOpen = false;
+
+        function toggleMenu() {
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; 
+                setTimeout(() => {
+                    mobileMenu.classList.remove('opacity-0');
+                    mobileBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                }, 10);
+            } else {
+                mobileMenu.classList.add('opacity-0');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                    mobileBtn.innerHTML = '<i class="fa-solid fa-bars-staggered"></i>';
+                }, 300);
+            }
+        }
+
+        mobileBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // --- Video Sound Control & Scroll Play ---
+        const videoEl = document.getElementById('hero-vid');
+        const muteBtn = document.getElementById('mute-btn');
+        if(muteBtn && videoEl) {
+            // Toggle Mute/Unmute manually
+            muteBtn.addEventListener('click', () => {
+                videoEl.muted = !videoEl.muted;
+                if(videoEl.muted) {
+                    muteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                } else {
+                    muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                }
+            });
+
+            // Intersection Observer: يراقب الفيديو ولما يظهر 50% منه في الشاشة يشغله
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5 
+            };
+
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // محاولة تشغيل الفيديو بصوت
+                        videoEl.muted = false; 
+                        const playPromise = videoEl.play();
+                        
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {
+                                // المتصفح وافق يشتغل بصوت
+                                muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                            }).catch(error => {
+                                // المتصفح رفض (بسبب سياسة منع الصوت التلقائي)، هنشغله صامت كبديل
+                                videoEl.muted = true;
+                                const mutedPlayPromise = videoEl.play();
+                                // السطر ده عشان نمنع ظهور Error لو الفيديو مش موجود في الـ Canvas
+                                if (mutedPlayPromise !== undefined) {
+                                    mutedPlayPromise.catch(e => console.warn("ملف الفيديو غير موجود حالياً في بيئة المعاينة."));
+                                }
+                                muteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                            });
+                        }
+                    } else {
+                        // إيقاف الفيديو لما يختفي من الشاشة
+                        videoEl.pause();
+                    }
+                });
+            }, observerOptions);
+
+            videoObserver.observe(videoEl);
+        }
+
+        // --- Navbar Scroll Effect ---
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-sm', 'bg-white/95');
+                navbar.classList.remove('glass');
+            } else {
+                navbar.classList.remove('shadow-sm', 'bg-white/95');
+                navbar.classList.add('glass');
+            }
+        });
+
+        // --- Toast System ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // --- Accordion Logic for Alternatives ---
+        document.querySelectorAll('.accordion-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('.fa-chevron-down');
+                
+                // Close all other accordions
+                document.querySelectorAll('.accordion-content').forEach(c => {
+                    if(c !== content) {
+                        c.classList.add('hidden');
+                        const otherIcon = c.previousElementSibling.querySelector('.fa-chevron-down');
+                        if (otherIcon) otherIcon.classList.remove('rotate-180');
+                    }
+                });
+                
+                // Toggle current accordion
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // --- Macro Calculator Logic ---
+        document.getElementById('macro-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Blurs active input to close mobile keyboard automatically
+            document.activeElement.blur(); 
+            
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseFloat(document.getElementById('age').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+            const goal = document.querySelector('input[name="goal"]:checked').value;
+
+            if(!weight || !height || !age) {
+                showToast("الرجاء إدخال جميع البيانات.");
+                return;
+            }
+
+            // 1. BMI Calculation & UI Update
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            
+            const bmiCategoryEl = document.getElementById("res-bmi-category");
+            const bmiIconBg = document.getElementById("bmi-icon-bg");
+            
+            let categoryText = "";
+            let colorClass = ""; 
+            let bgClass = ""; 
+            let borderClass = "";
+            
+            if (bmi < 18.5) {
+                categoryText = "نقص في الوزن (نحافة)";
+                colorClass = "text-blue-700"; bgClass = "bg-blue-50"; borderClass = "border-blue-200";
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                categoryText = "وزن طبيعي ومثالي";
+                colorClass = "text-green-700"; bgClass = "bg-green-50"; borderClass = "border-green-200";
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                categoryText = "زيادة في الوزن";
+                colorClass = "text-amber-700"; bgClass = "bg-amber-50"; borderClass = "border-amber-200";
+            } else {
+                categoryText = "سمنة (تتطلب اهتمام)";
+                colorClass = "text-red-700"; bgClass = "bg-red-50"; borderClass = "border-red-200";
+            }
+            
+            bmiCategoryEl.innerText = categoryText;
+            bmiCategoryEl.className = `inline-block w-full sm:w-auto px-6 py-3 rounded-xl text-sm md:text-base font-black transition-colors border-2 ${bgClass} ${colorClass} ${borderClass}`;
+            bmiIconBg.className = `w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 transition-colors ${bgClass} ${colorClass}`;
+
+            // 2. Mifflin-St Jeor Equation for BMR
+            let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+            bmr = gender === 'male' ? bmr + 5 : bmr - 161;
+
+            let tdee = bmr * activity;
+            let finalCalories = tdee;
+
+            if (goal === 'lose') finalCalories -= 500;
+            else if (goal === 'gain') finalCalories += 300;
+
+            if(gender === 'female' && finalCalories < 1200) finalCalories = 1200;
+            if(gender === 'male' && finalCalories < 1500) finalCalories = 1500;
+
+            finalCalories = Math.round(finalCalories);
+
+            let proteinGrams, fatGrams, carbsGrams;
+
+            if (goal === 'lose') {
+                proteinGrams = weight * 2.2; 
+                fatGrams = (finalCalories * 0.25) / 9; 
+            } else if (goal === 'gain') {
+                proteinGrams = weight * 2.0; 
+                fatGrams = (finalCalories * 0.25) / 9; 
+            } else {
+                proteinGrams = weight * 1.8;
+                fatGrams = (finalCalories * 0.30) / 9; 
+            }
+
+            const proteinCals = proteinGrams * 4;
+            const fatCals = fatGrams * 9;
+            carbsGrams = (finalCalories - (proteinCals + fatCals)) / 4;
+
+            // Trigger Animations
+            animateFloatValue("res-bmi", 0, bmi, 1000);
+            animateValue("res-calories", 0, finalCalories, 1000);
+            animateValue("res-protein", 0, Math.round(proteinGrams), 1000);
+            animateValue("res-fats", 0, Math.round(fatGrams), 1000);
+            animateValue("res-carbs", 0, Math.max(0, Math.round(carbsGrams)), 1000);
+
+            const resultsSection = document.getElementById('results');
+            resultsSection.classList.remove('hidden');
+            
+            // Smooth scroll to results on mobile
+            setTimeout(() => {
+                const y = resultsSection.getBoundingClientRect().top + window.scrollY - 100;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }, 100);
+            
+            showToast("تم الحساب بنجاح! 🎯");
+        });
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function animateFloatValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = (progress * (end - start) + start).toFixed(1);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- Recipes Data & Rendering ---
+        const recipesData = [
+            // الإفطار
+            { 
+                id: 1, title: "الفول المدمس بالليمون والكمون", category: "breakfast", cals: 355, pro: 16.5, carb: 53, fat: 7.5, img: "food/foul.jpg", time: "10 دقائق",
+                ingredients: [
+                    "150 جرام فول مدمس مسلوق (سادة)",
+                    "5 جرام زيت زيتون بكر ممتاز",
+                    "50 جرام طماطم مقطعة",
+                    "50 جرام خبز بلدي (حوالي نصف رغيف)",
+                    "عصير ليمون، كمون، ملح (حسب الرغبة)"
+                ]
+            },
+            { 
+                id: 2, title: "طاسة البيض بالخضروات وجبن القريش", category: "breakfast", cals: 310, pro: 25, carb: 22, fat: 12.5, img: "food/eggs_cottage.jpg", time: "10 دقائق",
+                ingredients: [
+                    "100 جرام بيض كامل (حوالي بيضتين)",
+                    "60 جرام جبن قريش قليل الملح",
+                    "100 جرام بصل، فلفل ألوان، طماطم مجتمعة",
+                    "2 جرام رذاذ زيت زيتون",
+                    "30 جرام خبز بلدي"
+                ]
+            },
+            { 
+                id: 3, title: "الشوفان بالحليب والموز", category: "breakfast", cals: 325, pro: 13, carb: 51, fat: 7, img: "food/oats_banana.jpg", time: "5 دقائق",
+                ingredients: [
+                    "45 جرام رقائق الشوفان الكاملة",
+                    "150 جرام حليب بقري خالي الدسم",
+                    "60 جرام موز ناضج",
+                    "10 جرام لوز نيء",
+                    "قرفة ومحلي بدون سعرات (حسب الرغبة)"
+                ]
+            },
+            
+            // الغداء
+            { 
+                id: 4, title: "كشري مصري عالي البروتين", category: "lunch", cals: 445, pro: 21, carb: 82, fat: 3.5, img: "food/koshari.jpg", time: "30 دقيقة",
+                ingredients: [
+                    "50 جرام عدس بجبة (نيء)",
+                    "30 جرام مكرونة قمح كامل (نيئة)",
+                    "30 جرام أرز بسمتي أو مصري (نيء)",
+                    "40 جرام حمص مسلوق",
+                    "100 جرام صلصة طماطم مسبكة بالثوم والخل (بدون زيت)",
+                    "15 جرام بصل مقرمش محمص في القلاية الهوائية"
+                ]
+            },
+            { 
+                id: 5, title: "المكرونة بالبشاميل (الإصدار الصحي)", category: "lunch", cals: 420, pro: 36, carb: 50, fat: 7.5, img: "food/bechamel.jpg", time: "40 دقيقة",
+                ingredients: [
+                    "60 جرام مكرونة قلم (نيئة)",
+                    "100 جرام لحم مفروم (5% دهن)",
+                    "150 جرام حليب خالي الدسم",
+                    "15 جرام دقيق شوفان",
+                    "بصل مفروم، قرفة، جوزة الطيب للتعصيج والتنكيه"
+                ]
+            },
+            { 
+                id: 6, title: "الكبدة الإسكندراني للدايت", category: "lunch", cals: 425, pro: 40, carb: 33, fat: 12, img: "food/liver.jpg", time: "15 دقيقة",
+                ingredients: [
+                    "150 جرام كبدة بقري مقطعة رفيعاً",
+                    "80 جرام فلفل أخضر وحار",
+                    "ثوم، كمون، كزبرة، خل، ليمون للتتبيل",
+                    "5 جرام زيت نباتي أو زيت زيتون",
+                    "50 جرام خبز بلدي"
+                ]
+            },
+            { 
+                id: 7, title: "صينية البطاطس بالفراخ في الفرن", category: "lunch", cals: 360, pro: 36, carb: 32, fat: 8, img: "food/chicken_potato.jpg", time: "45 دقيقة",
+                ingredients: [
+                    "150 جرام دجاجة منزوعة الجلد (ربع دجاجة - صدر لحم صافي)",
+                    "150 جرام بطاطس مقطعة حلقات",
+                    "100 جرام بصل، طماطم، فلفل أخضر",
+                    "ملح، فلفل أسود، بهارات دجاج للتتبيل"
+                ]
+            },
+            
+            // العشاء (والسلطات)
+            { 
+                id: 8, title: "التونة بالطماطم والبصل", category: "dinner", cals: 210, pro: 25, carb: 20, fat: 2, img: "food/tuna_salad.jpg", time: "5 دقائق",
+                ingredients: [
+                    "100 جرام تونة معلبة في الماء (وزن مصفى)",
+                    "80 جرام بصل مفروم وطماطم",
+                    "عصير ليمون وكمون (حسب الرغبة)",
+                    "30 جرام توست أسمر"
+                ]
+            },
+            { 
+                id: 9, title: "سلطة سيزر بالدجاج", category: "dinner", cals: 350, pro: 39, carb: 17, fat: 12.5, img: "food/caesar_salad.jpg", time: "15 دقيقة",
+                ingredients: [
+                    "100 جرام صدور دجاج مشوية (قطع)",
+                    "150 جرام خس أو كابوتشي مقطع",
+                    "30 جرام قطع توست مدهونة بـ 3 جرام زبدة ومحمصة",
+                    "الدريسينج: 10 جم مايونيز لايت، 5 جم مستردة، ليمون",
+                    "10 جرام جبن بارميزان مبشور، فص ثوم مفروم، ملح وفلفل"
+                ]
+            },
+            { 
+                id: 10, title: "جبن قريش بالبطيخ", category: "dinner", cals: 195, pro: 16, carb: 25, fat: 1.5, img: "food/watermelon_cheese.jpg", time: "3 دقائق",
+                ingredients: [
+                    "120 جرام جبن قريش",
+                    "250 جرام بطيخ طازج مقطع",
+                    "نعناع طازج للتزيين"
+                ]
+            }
+        ];
+
+        const recipeContainer = document.getElementById('recipe-container');
+
+        function renderRecipes(filter = 'all') {
+            recipeContainer.innerHTML = '';
+            
+            const filtered = recipesData.filter(r => {
+                if(filter === 'all') return true;
+                if(filter === 'under400') return r.cals < 400;
+                return r.category === filter;
+            });
+
+            filtered.forEach((recipe, index) => {
+                const badgeClass = recipe.cals < 300 ? 'bg-green-100 text-green-700 border-green-200' : 'bg-amber-100 text-amber-700 border-amber-200';
+                
+                const card = `
+                    <div onclick="openRecipeModal(${recipe.id})" class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 opacity-0 cursor-pointer group flex flex-col" style="animation: fadeIn 0.4s ease-out ${index * 0.1}s forwards;">
+                        <div class="relative h-48 md:h-56 overflow-hidden shrink-0">
+                            <img src="${recipe.img}" alt="${recipe.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/f8fafc/94a3b8?text=صورة+الوجبة'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80"></div>
+                            
+                            <div class="absolute top-3 right-3 ${badgeClass} border px-2.5 py-1 rounded-full text-[10px] md:text-xs font-black shadow-sm flex items-center gap-1">
+                                <i class="fa-solid fa-fire text-[10px]"></i> ${recipe.cals} سعر
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur text-dark px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold flex items-center gap-1 shadow-sm">
+                                <i class="fa-regular fa-clock text-primary"></i> ${recipe.time}
+                            </div>
+                            
+                            <!-- Click indicator overlay -->
+                            <div class="absolute inset-0 bg-primary/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="bg-white text-primary px-4 py-2 rounded-full font-bold text-sm shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">عرض المقادير</span>
+                            </div>
+                        </div>
+                        <div class="p-5 md:p-6 flex-grow flex flex-col justify-between">
+                            <h3 class="text-base md:text-lg font-black text-dark mb-4 line-clamp-2">${recipe.title}</h3>
+                            
+                            <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border border-gray-100 mt-auto">
+                                <div class="text-center w-1/3">
+                                    <span class="block text-[10px] text-gray-500 font-bold mb-0.5">بروتين</span>
+                                    <span class="font-black text-sm text-blue-600">${recipe.pro}g</span>
+                                </div>
+                                <div class="w-px h-6 bg-gray-200"></div>
+                                <div class="text-center w-1/3">
+                                    <span class="block text-[10px] text-gray-500 font-bold mb-0.5">كارب</span>
+                                    <span class="font-black text-sm text-amber-600">${recipe.carb}g</span>
+                                </div>
+                                <div class="w-px h-6 bg-gray-200"></div>
+                                <div class="text-center w-1/3">
+                                    <span class="block text-[10px] text-gray-500 font-bold mb-0.5">دهون</span>
+                                    <span class="font-black text-sm text-rose-500">${recipe.fat}g</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                recipeContainer.innerHTML += card;
+            });
+        }
+
+        renderRecipes();
+
+        // --- Recipe Modal Logic ---
+        const recipeModal = document.getElementById('recipe-modal');
+        const modalContent = document.getElementById('recipe-modal-content');
+
+        function openRecipeModal(id) {
+            const recipe = recipesData.find(r => r.id === id);
+            if(!recipe) return;
+
+            document.getElementById('modal-img').src = recipe.img;
+            document.getElementById('modal-img').onerror = function() { this.src='https://placehold.co/600x400/1e293b/ffffff?text=صورة+الوجبة'; };
+            document.getElementById('modal-title').innerText = recipe.title;
+            document.getElementById('modal-pro').innerText = recipe.pro + 'g';
+            document.getElementById('modal-carb').innerText = recipe.carb + 'g';
+            document.getElementById('modal-fat').innerText = recipe.fat + 'g';
+
+            const ingredientsList = document.getElementById('modal-ingredients');
+            ingredientsList.innerHTML = '';
+            recipe.ingredients.forEach(ing => {
+                ingredientsList.innerHTML += `
+                    <li class="flex items-start gap-2 text-sm md:text-base text-gray-600 font-medium">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></div>
+                        <span>${ing}</span>
+                    </li>
+                `;
+            });
+
+            recipeModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            
+            // Trigger animation
+            setTimeout(() => {
+                modalContent.classList.remove('translate-y-full', 'sm:scale-95');
+            }, 10);
+        }
+
+        function closeRecipeModal() {
+            modalContent.classList.add('translate-y-full', 'sm:scale-95');
+            setTimeout(() => {
+                recipeModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Recipe Filter Logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-dark', 'text-white', 'shadow-md', 'active');
+                    if(b.dataset.filter === 'under400') {
+                        b.className = 'filter-btn shrink-0 bg-red-50 text-red-600 border border-red-100 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-red-100 transition flex items-center gap-2 snap-center';
+                    } else {
+                        b.className = 'filter-btn shrink-0 bg-white text-gray-600 border border-gray-200 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold hover:bg-gray-50 transition snap-center';
+                    }
+                });
+                
+                const target = e.currentTarget;
+                if(target.dataset.filter === 'under400') {
+                    target.className = 'filter-btn active shrink-0 bg-red-500 text-white shadow-md border border-red-500 px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold transition flex items-center gap-2 snap-center';
+                } else {
+                    target.className = 'filter-btn active shrink-0 bg-dark text-white px-5 md:px-6 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold shadow-md transition snap-center';
+                }
+
+                // Scroll the clicked filter button into view on mobile
+                target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+                renderRecipes(target.dataset.filter);
+            });
+        });
+
+        // --- Auto-load reviews from review folder ---
+        const reviewsGallery = document.getElementById('reviews-gallery');
+        let reviewIndex = 1;
+
+        function loadNextReview() {
+            // محاولة تحميل الصورة بالترتيب
+            const imgPath = `review/${reviewIndex}.jpg`;
+            const img = new Image();
+            
+            img.onload = function() {
+                // إذا تم العثور على الصورة (أول صورة)، نمسح نص "جاري التحميل"
+                if (reviewIndex === 1 && document.getElementById('reviews-loading')) {
+                    reviewsGallery.innerHTML = '';
+                }
+
+                // إضافة الكارت الخاص بالصورة
+                const cardHTML = `
+                    <div class="shrink-0 snap-center w-[85vw] sm:w-[350px] bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex items-center justify-center p-3 transition-transform md:hover:scale-[1.02]">
+                        <img src="${imgPath}" alt="رأي عميل ${reviewIndex}" class="w-full max-h-[500px] object-contain rounded-2xl">
+                    </div>
+                `;
+                reviewsGallery.insertAdjacentHTML('beforeend', cardHTML);
+                
+                reviewIndex++;
+                loadNextReview(); // محاولة تحميل الصورة اللي بعدها
+            };
+
+            img.onerror = function() {
+                // إذا لم يتم العثور على الصورة، تتوقف الدورة هنا (معنى ذلك أننا وصلنا لآخر صورة)
+                if (reviewIndex === 1 && document.getElementById('reviews-loading')) {
+                    reviewsGallery.innerHTML = '<div class="w-full text-center text-gray-500 py-10">لا توجد صور حالياً. سيتم إضافتها قريباً.</div>';
+                }
+            };
+
+            img.src = imgPath;
+        }
+
+        // بدء تحميل الصور عند فتح الصفحة
+        if(reviewsGallery) {
+            loadNextReview();
+        }
+
+    </script>
+</body>
+</html>

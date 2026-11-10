@@ -1,0 +1,168 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Represents user account profile and physical goals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "currentWeight": { "type": "number" },
+        "targetWeight": { "type": "number" },
+        "height": { "type": "number" },
+        "goal": { "type": "string", "maxLength": 50 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "AdminRole": {
+      "title": "AdminRole",
+      "description": "Stores admin status mapping for trusted server-side rules check",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Recipe": {
+      "title": "Recipe",
+      "description": "Healthy meal recipe with macros and ingredients",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "enum": ["breakfast", "lunch", "dinner", "snack"] },
+        "calories": { "type": "number" },
+        "protein": { "type": "number" },
+        "carbs": { "type": "number" },
+        "fat": { "type": "number" },
+        "prepTime": { "type": "string", "maxLength": 50 },
+        "ingredients": { "type": "string" },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "authorId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "category", "calories", "protein", "carbs", "fat"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "Educational nutrition or health guide written by Doctor/Admin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 50 },
+        "summary": { "type": "string", "maxLength": 500 },
+        "content": { "type": "string", "maxLength": 10000 },
+        "readTime": { "type": "string", "maxLength": 50 },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "category", "summary", "content"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Client success story and transformation testimonial",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientName": { "type": "string", "maxLength": 100 },
+        "weightLost": { "type": "string", "maxLength": 50 },
+        "story": { "type": "string", "maxLength": 1000 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "source": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["clientName", "weightLost", "imageUrl"]
+    },
+    "ChatThread": {
+      "title": "ChatThread",
+      "description": "Consultation thread between a specific user and Doctor",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userEmail": { "type": "string", "maxLength": 150 },
+        "lastMessage": { "type": "string", "maxLength": 500 },
+        "lastUpdated": { "type": "string" },
+        "unreadDoctor": { "type": "number" },
+        "unreadUser": { "type": "number" }
+      },
+      "required": ["userId", "userName", "userEmail"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Message inside a consultation thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "chatId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderRole": { "type": "string", "enum": ["user", "admin"] },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "text": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["chatId", "senderId", "senderRole", "text"]
+    },
+    "UserReport": {
+      "title": "UserReport",
+      "description": "Periodic health, weight, and macro calculation tracking report",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userEmail": { "type": "string", "maxLength": 150 },
+        "date": { "type": "string", "maxLength": 50 },
+        "weight": { "type": "number" },
+        "bmi": { "type": "number" },
+        "caloriesTarget": { "type": "number" },
+        "waterLiters": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "weight", "bmi", "caloriesTarget"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Stores user profile data"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRole" },
+      "description": "Stores admin roles"
+    },
+    "/recipes/{recipeId}": {
+      "schema": { "$ref": "#/entities/Recipe" },
+      "description": "Healthy meal recipes"
+    },
+    "/articles/{articleId}": {
+      "schema": { "$ref": "#/entities/Article" },
+      "description": "Educational articles by the doctor"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Transformation reviews and testimonials"
+    },
+    "/chats/{chatId}": {
+      "schema": { "$ref": "#/entities/ChatThread" },
+      "description": "Direct consultation chat threads"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Individual messages in a chat thread"
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/UserReport" },
+      "description": "User progress logs and reports"
+    }
+  }
+}

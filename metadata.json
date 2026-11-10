@@ -1,0 +1,6 @@
+{
+  "name": "Eat Smart - دكتور أماني رأفت",
+  "description": "منصة التغذية العلاجية الذكية والمتابعة الطبية مع د. أماني رأفت - حاسبة سعرات، وصفات صحية، مقالات، شات مباشر واستشارات مخصصة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

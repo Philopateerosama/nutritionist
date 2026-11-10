@@ -271,17 +271,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const handleAuthError = (error: any) => {
-    let msg = 'حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.';
-    if (error?.code === 'auth/user-not-found' || error?.code === 'auth/wrong-password' || error?.code === 'auth/invalid-credential') {
+    let msg = error?.message || 'حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.';
+    const code = error?.code || '';
+
+    if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
       msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-    } else if (error?.code === 'auth/email-already-in-use') {
+    } else if (code === 'auth/email-already-in-use') {
       msg = 'هذا البريد الإلكتروني مسجل بالفعل، يرجى تسجيل الدخول.';
-    } else if (error?.code === 'auth/weak-password') {
+    } else if (code === 'auth/weak-password') {
       msg = 'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف أو أرقام على الأقل.';
-    } else if (error?.code === 'auth/invalid-email') {
+    } else if (code === 'auth/invalid-email') {
       msg = 'صيغة البريد الإلكتروني غير صحيحة.';
-    } else if (error?.code === 'auth/network-request-failed') {
+    } else if (code === 'auth/network-request-failed') {
       msg = 'تأكد من اتصالك بالإنترنت وحاول ثانية.';
+    } else if (code === 'auth/unauthorized-domain') {
+      msg = `الدومين الحالي غير مضاف في قائمة النطاقات المصرح بها في Firebase. يرجى إضافته في Firebase Console > Authentication > Settings > Authorized domains.`;
+    } else if (code === 'auth/operation-not-allowed') {
+      msg = 'طريقة تسجيل الدخول هذه غير مفعلة في مشروع Firebase. يرجى تفعيلها من Firebase Console > Authentication > Sign-in method.';
+    } else if (code === 'auth/popup-blocked') {
+      msg = 'المتصفح حظر نافذة تسجيل الدخول المنبثقة (Popup). يرجى السماح بالنوافذ المنبثقة والمحاولة ثانية.';
+    } else if (code) {
+      msg = `حدث خطأ: ${code} - يرجى التأكد من إعدادات Firebase Authentication.`;
     }
     throw new Error(msg);
   };

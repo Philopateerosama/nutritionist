@@ -18,8 +18,10 @@ export const activeConfig = {
 // Initialize Firebase App
 export const app = initializeApp(activeConfig);
 
-// Initialize Firestore with specific database ID (CRITICAL)
-export const db = getFirestore(app, activeConfig.firestoreDatabaseId);
+// Initialize Firestore (handles standard default database or custom id)
+export const db = activeConfig.firestoreDatabaseId && activeConfig.firestoreDatabaseId !== '(default)'
+  ? getFirestore(app, activeConfig.firestoreDatabaseId)
+  : getFirestore(app);
 
 // Initialize Firebase Auth
 export const auth = getAuth(app);

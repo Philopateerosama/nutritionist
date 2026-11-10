@@ -1,12 +1,10 @@
 {
-  "projectId": "clear-booster-ckpm1",
-  "appId": "1:781862231003:web:1d02e75d0055c9f30465fe",
-  "apiKey": "AIzaSyByGSEYlOzV0aDmNjUyQzf2Ijcgix-oUzI",
-  "authDomain": "clear-booster-ckpm1.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-4db327d3-8d94-4193-a3fd-cebcd9b5aa68",
-  "storageBucket": "clear-booster-ckpm1.firebasestorage.app",
-  "messagingSenderId": "781862231003",
-  "measurementId": "",
-  "oAuthClientId": "781862231003-js5j7mbf2d1b2chf37vigh0nfnsnpp07.apps.googleusercontent.com",
-  "recaptchaSiteKey": ""
+  "projectId": "eat-smart-83089",
+  "appId": "1:975765030990:web:c598e39ebde06cf9cb5b1f",
+  "apiKey": "AIzaSyCa_5KV27FfIQrpJhiUTs9952YnBCYPvSU",
+  "authDomain": "eat-smart-83089.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "eat-smart-83089.firebasestorage.app",
+  "messagingSenderId": "975765030990",
+  "measurementId": "G-C74HK25JFC"
 }
